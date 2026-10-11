@@ -12,7 +12,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 STATIC_DIR = PROJECT_ROOT / "hf_space_static"
 
 css_content = """/* Modern Clean AI Platform Design System */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
   /* Luminous Light Palette */
@@ -50,7 +50,7 @@ css_content = """/* Modern Clean AI Platform Design System */
   --shadow-card: 0 20px 40px -12px rgba(2, 132, 199, 0.08), 0 1px 3px 0 rgba(15, 23, 42, 0.04);
   --shadow-blue-glow: 0 12px 30px -5px rgba(29, 78, 216, 0.25);
   
-  --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-main: 'Be Vietnam Pro', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
