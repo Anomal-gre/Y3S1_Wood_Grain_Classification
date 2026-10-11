@@ -20,9 +20,9 @@
 \title{Nhận Diện Loài Gỗ Từ Ảnh Vân Gỗ Cận Cảnh Sử Dụng Học Chuyển Giao Hai Giai Đoạn}
 
 \author{
-\IEEEauthorblockN{Sinh viên thực hiện (Nhóm 11)}
-\IEEEauthorblockA{\textit{Khoa Công nghệ Thông tin, Trường Đại học Công nghệ (VNU-UET)} \\
-Môn học: Học Máy (INT3401) -- Lớp học phần: INT3401 11 \\
+\IEEEauthorblockN{Trần Gia Bảo (NT - 24022949), Khai Quang (24023009), \\ Vũ Tuấn Vương (24023097), Nguyễn Đình Hùng (24023001)}
+\IEEEauthorblockA{\textit{Khoa Công nghệ Thông tin, Trường Đại học Công nghệ, ĐHQGHN} \\
+Môn học: Học Máy (INT3401) -- Nhóm 11 (Lớp học phần: INT3401 11) \\
 Hà Nội, Việt Nam}
 }
 
@@ -30,7 +30,8 @@ Hà Nội, Việt Nam}
 
 \begin{abstract}
 Nhận diện loài gỗ từ ảnh cấu trúc vân cận cảnh (macroscopic grain images) là bài toán phân loại kết cấu tinh vi (fine-grained texture classification) có ý nghĩa thiết thực trong kiểm soát lâm sản, chống gian lận thương mại và thẩm định đồ gỗ nội thất. Các phương pháp truyền thống dựa trên đặc trưng thủ công như Local Binary Patterns (LBP) hoặc GLCM thường dễ bị ảnh hưởng bởi góc xẻ gỗ và biến thiên quang học. Nghiên cứu này đề xuất phương pháp phân loại 12 loài gỗ dựa trên mô hình học chuyển giao sâu hai giai đoạn (Two-Stage Transfer Learning) với xương sống ResNet18 kết hợp kỹ thuật tăng cường dữ liệu màu sắc (Color Augmentation). Thực nghiệm được tiến hành trên tập dữ liệu chuẩn WOOD-AUTH gồm 8.544 ảnh macro (5.708 ảnh huấn luyện, 2.836 ảnh kiểm thử độc lập). Kết quả cho thấy mô hình đạt Macro-F1 vượt trội so với baseline LBP-SVM, duy trì độ trễ suy luận thời gian thực trên CPU. Thử nghiệm độ bền vững (Robustness Test) với 7 dạng biến đổi màu sắc (đen trắng, suy giảm bão hòa, lệch tông màu, tối/sáng) khẳng định mô hình tập trung học cấu trúc thớ gỗ thay vì bị đánh lừa bởi màu sắc bề mặt. Bản đồ kích hoạt Grad-CAM cung cấp cơ sở trực quan giải thích quyết định của mạng nơ-ron.\\
-\textbf{Mã nguồn dự án:} \url{https://github.com/INT3401-Group11/Wood-Grain-Classification}
+\textbf{Mã nguồn dự án:} \url{https://github.com/INT3401-Group11/Wood-Grain-Classification}\\
+\textbf{Web Demo trực tuyến:} \url{https://huggingface.co/spaces/AnomalGreatad/wood-grain-classification}
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -41,15 +42,14 @@ Nhận diện loài gỗ, Fine-grained Texture, Transfer Learning, ResNet18, Col
 \begin{table}[htbp]
 \caption{Bảng phân công công việc nhóm trong đồ án INT3401}
 \begin{center}
-\begin{tabular}{p{2.2cm}p{4.2cm}c}
+\begin{tabular}{p{2.6cm}p{4.2cm}c}
 \toprule
-\textbf{Thành viên} & \textbf{Nội dung phụ trách chính} & \textbf{Đóng góp} \\
+\textbf{Thành viên (MSSV)} & \textbf{Nội dung phụ trách chính} & \textbf{Đóng góp} \\
 \midrule
-Thành viên 1 & Tải, kiểm tra toàn vẹn, phân chia tập dữ liệu chống rò rỉ (\texttt{splits.json}) & 100\% \\
-Thành viên 2 & Xây dựng kiến trúc mô hình \texttt{WoodNet}, pipeline huấn luyện 2 giai đoạn & 100\% \\
-Thành viên 3 & Triển khai Baseline LBP/GLCM + SVM, thực nghiệm ablation \& robustness & 100\% \\
-Thành viên 4 & Đánh giá metrics, ma trận nhầm lẫn, trực quan hóa giải thích Grad-CAM & 100\% \\
-Thành viên 5 (NT) & Điều phối CoReach, ứng dụng demo Streamlit, viết báo cáo LaTeX & 100\% \\
+Trần Gia Bảo (NT)\newline 24022949 & Điều phối dự án, xây dựng kiến trúc \texttt{WoodNet}, pipeline huấn luyện 2 giai đoạn, viết báo cáo LaTeX & 100\% \\
+Khai Quang\newline 24023009 & Triển khai mô hình Baseline LBP/GLCM + SVM, thực nghiệm Ablation Study \& Robustness Test & 100\% \\
+Vũ Tuấn Vương\newline 24023097 & Tiền xử lý dữ liệu (\texttt{splits.json}), phát triển và triển khai ứng dụng Web Demo (Hugging Face Spaces) & 100\% \\
+Nguyễn Đình Hùng\newline 24023001 & Đánh giá kiểm thử đa mô hình (Confusion Matrix, Macro-F1), trực quan hóa giải thích Grad-CAM & 100\% \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -213,8 +213,11 @@ Ma trận nhầm lẫn chuẩn hóa (Hình \ref{fig:cm}) cho thấy hầu hết 
 
 Bản đồ kích hoạt Grad-CAM (Hình \ref{fig:gradcam}) minh chứng mạng nơ-ron tập trung cao độ vào mật độ lỗ mạch gỗ (pores), thớ gỗ xoắn và sự phân bố tia gỗ (medullary rays) tự nhiên, khẳng định quyết định của mô hình dựa trên cấu trúc giải phẫu học thực thụ.
 
+\subsection{Triển khai ứng dụng Web Demo (Hugging Face Spaces)}
+Để phục vụ việc nghiệm thu và ứng dụng thực tiễn, nhóm đã đóng gói toàn bộ pipeline và triển khai ứng dụng Web trực tuyến trên nền tảng Hugging Face Spaces (\url{https://huggingface.co/spaces/AnomalGreatad/wood-grain-classification}). Hệ thống cho phép người dùng kiểm thử đồng thời cả 4 mô hình (ResNet-18 đề xuất, Baseline LBP+GLCM+SVM, ResNet-50 và ConvNeXt-Tiny) trên cùng một mẫu ảnh thớ vân gỗ (hỗ trợ cả kho 12 ảnh mẫu chuẩn và tải ảnh tùy biến từ người dùng). Đồng thời, hệ thống kết xuất bản đồ nhiệt Grad-CAM thời gian thực, cung cấp góc nhìn minh bạch cho chuyên gia giám định lâm sản.
+
 \section{Kết Luận}
-Nghiên cứu đã xây dựng thành công quy trình phân loại 12 loài gỗ dựa trên ảnh cận cảnh macro với phương pháp học chuyển giao sâu hai giai đoạn. Mô hình ResNet18 đạt Macro-F1 ấn tượng 94.82\%, vượt trội so với baseline LBP-SVM và có khả năng chống chịu cao với các biến đổi màu sắc sơn phủ. Hệ thống đã được tích hợp giao diện demo trực quan bằng Streamlit và đóng gói mã nguồn mở hoàn chỉnh. Hướng phát triển tiếp theo gồm mở rộng tập dữ liệu thêm các loài gỗ quý đặc hữu Đông Nam Á và tối ưu hóa mô hình với mạng chuyên biệt cho Texture.
+Nghiên cứu đã xây dựng thành công quy trình phân loại 12 loài gỗ dựa trên ảnh cận cảnh macro với phương pháp học chuyển giao sâu hai giai đoạn. Mô hình ResNet18 đạt Macro-F1 ấn tượng 92.57\% (Accuracy 92.74\%), vượt trội so với baseline LBP-SVM và có khả năng chống chịu cao với các biến đổi màu sắc sơn phủ. Hệ thống đã được tích hợp giao diện demo trực quan trực tuyến và đóng gói mã nguồn mở hoàn chỉnh. Hướng phát triển tiếp theo gồm mở rộng tập dữ liệu thêm các loài gỗ quý đặc hữu Đông Nam Á và tối ưu hóa mô hình với mạng chuyên biệt cho Texture.
 
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
