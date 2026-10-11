@@ -36,6 +36,9 @@ def build():
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hệ Thống Phân Loại Loài Gỗ | Đánh Giá Đồng Thời 4 Mô Hình | INT3401</title>
   <meta name="description" content="Nghiên cứu phân loại 12 loài gỗ châu Âu thông qua mạng học sâu ResNet-18, Baseline SVM, ResNet-50 và ConvNeXt-Tiny với giải thích trực quan Grad-CAM.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
