@@ -1,0 +1,595 @@
+{
+  "title": "Wood Grain Species Classification & Visual Interpretability",
+  "course": "Học Máy (INT3401) - Lớp 11",
+  "team": "Nhóm 11",
+  "model": "ResNet-18 Deep Transfer Learning (Two-Stage Training + Color Augmentation)",
+  "dataset": "WOOD-AUTH Benchmark (Barmpoutis 2018), 8,544 ảnh microscopic wood grain",
+  "kpis": {
+    "test_accuracy": "92.74%",
+    "macro_f1": "92.57%",
+    "weighted_f1": "92.75%",
+    "num_classes": 12,
+    "latency_cpu": "14.73 ms",
+    "val_f1_best": "92.82%"
+  },
+  "baseline_comparison": [
+    {
+      "model": "Baseline LBP + GLCM + RBF-SVM",
+      "f1": 78.92,
+      "acc": 80.99,
+      "latency": "0.36 ms"
+    },
+    {
+      "model": "ResNet-18 (Stage 1 Warmup)",
+      "f1": 85.4,
+      "acc": 86.1,
+      "latency": "14.7 ms"
+    },
+    {
+      "model": "ResNet-18 Two-Stage (Đề xuất)",
+      "f1": 92.57,
+      "acc": 92.74,
+      "latency": "14.7 ms"
+    }
+  ],
+  "robustness_benchmark": [
+    {
+      "condition": "Ảnh nguyên bản (Original)",
+      "f1": 92.57
+    },
+    {
+      "condition": "Mất màu hoàn toàn (Grayscale)",
+      "f1": 82.06
+    },
+    {
+      "condition": "Giảm bão hòa màu 50% (Desaturate)",
+      "f1": 88.82
+    },
+    {
+      "condition": "Lệch tông màu +20% (Hue +0.2)",
+      "f1": 78.9
+    },
+    {
+      "condition": "Lệch tông màu -20% (Hue -0.2)",
+      "f1": 82.96
+    },
+    {
+      "condition": "Thiếu sáng (Dark / Low-light)",
+      "f1": 90.74
+    },
+    {
+      "condition": "Thừa sáng (Bright / Over-exposed)",
+      "f1": 91.04
+    }
+  ],
+  "samples": [
+    {
+      "id": 1,
+      "filename": "sample_1.jpg",
+      "cam_filename": "cam_1.jpg",
+      "species": {
+        "id": 1,
+        "scientific": "Fagus sylvatica",
+        "common_en": "European Beech",
+        "common_vi": "Gỗ Dẻ Gai Châu Âu",
+        "type": "Gỗ cứng (Hardwood)",
+        "porosity": "Lỗ mạch phân tán (Diffuse-porous)",
+        "grain": "Thớ mịn, thẳng, tia gỗ ngắn dạng đốm nâu li ti phân bố đều khắp mặt cắt.",
+        "usage": "Nội thất cao cấp, sàn gỗ chịu ma sát, đồ chơi mộc, cán công cụ kỹ thuật.",
+        "density": "710 kg/m³"
+      },
+      "predictions": [
+        {
+          "class_id": 1,
+          "name": "Gỗ Dẻ Gai Châu Âu",
+          "scientific": "Fagus sylvatica",
+          "probability": 0.5722422003746033
+        },
+        {
+          "class_id": 4,
+          "name": "Gỗ Dẻ Trùng Khánh (Castanea)",
+          "scientific": "Castanea sativa",
+          "probability": 0.23448961973190308
+        },
+        {
+          "class_id": 12,
+          "name": "Gỗ Óc Chó Phương Tây (Walnut)",
+          "scientific": "Juglans regia",
+          "probability": 0.0952342078089714
+        },
+        {
+          "class_id": 8,
+          "name": "Gỗ Thông Scots",
+          "scientific": "Pinus sylvestris",
+          "probability": 0.01975323259830475
+        }
+      ],
+      "is_correct": true,
+      "confidence": 0.5722422003746033
+    },
+    {
+      "id": 2,
+      "filename": "sample_2.jpg",
+      "cam_filename": "cam_2.jpg",
+      "species": {
+        "id": 2,
+        "scientific": "Robinia pseudoacacia",
+        "common_en": "Black Locust",
+        "common_vi": "Gỗ Keo Dậu Hoa Trắng",
+        "type": "Gỗ cứng (Hardwood cực bền)",
+        "porosity": "Lỗ mạch dạng vòng (Ring-porous)",
+        "grain": "Vòng năm rõ rệt, mạch gỗ xếp dạng vòng đồng tâm, vân nổi gợn sóng sắc nét.",
+        "usage": "Trụ hàng rào ngoài trời, tà vẹt đường sắt, đóng tàu thuyền, sàn chịu tải nặng.",
+        "density": "770 kg/m³"
+      },
+      "predictions": [
+        {
+          "class_id": 2,
+          "name": "Gỗ Keo Dậu Hoa Trắng",
+          "scientific": "Robinia pseudoacacia",
+          "probability": 0.8941268920898438
+        },
+        {
+          "class_id": 1,
+          "name": "Gỗ Dẻ Gai Châu Âu",
+          "scientific": "Fagus sylvatica",
+          "probability": 0.03792016953229904
+        },
+        {
+          "class_id": 4,
+          "name": "Gỗ Dẻ Trùng Khánh (Castanea)",
+          "scientific": "Castanea sativa",
+          "probability": 0.022235732525587082
+        },
+        {
+          "class_id": 3,
+          "name": "Gỗ Anh Đào Dại (Cherry)",
+          "scientific": "Prunus avium",
+          "probability": 0.01570403203368187
+        }
+      ],
+      "is_correct": true,
+      "confidence": 0.8941268920898438
+    },
+    {
+      "id": 3,
+      "filename": "sample_3.jpg",
+      "cam_filename": "cam_3.jpg",
+      "species": {
+        "id": 3,
+        "scientific": "Prunus avium",
+        "common_en": "Wild Cherry",
+        "common_vi": "Gỗ Anh Đào Dại (Cherry)",
+        "type": "Gỗ cứng (Hardwood quý)",
+        "porosity": "Lỗ mạch bán vòng (Semi-ring-porous)",
+        "grain": "Vân mịn màng, sóng nhẹ lượn tự nhiên, chuyển ánh ấm đỏ sẫm sang trọng.",
+        "usage": "Tủ kệ hoàng gia, đàn piano, violin, tẩu thuốc và đồ tiện mỹ nghệ cao cấp.",
+        "density": "600 kg/m³"
+      },
+      "predictions": [
+        {
+          "class_id": 3,
+          "name": "Gỗ Anh Đào Dại (Cherry)",
+          "scientific": "Prunus avium",
+          "probability": 0.3161431849002838
+        },
+        {
+          "class_id": 5,
+          "name": "Gỗ Thông Douglas",
+          "scientific": "Pseudotsuga menziesii",
+          "probability": 0.19355519115924835
+        },
+        {
+          "class_id": 1,
+          "name": "Gỗ Dẻ Gai Châu Âu",
+          "scientific": "Fagus sylvatica",
+          "probability": 0.1686490923166275
+        },
+        {
+          "class_id": 6,
+          "name": "Gỗ Thông Rụng Lá Châu Âu",
+          "scientific": "Larix decidua",
+          "probability": 0.1315189003944397
+        }
+      ],
+      "is_correct": true,
+      "confidence": 0.3161431849002838
+    },
+    {
+      "id": 4,
+      "filename": "sample_4.jpg",
+      "cam_filename": "cam_4.jpg",
+      "species": {
+        "id": 4,
+        "scientific": "Castanea sativa",
+        "common_en": "Sweet Chestnut",
+        "common_vi": "Gỗ Dẻ Trùng Khánh (Castanea)",
+        "type": "Gỗ cứng (Hardwood)",
+        "porosity": "Lỗ mạch dạng vòng (Ring-porous)",
+        "grain": "Mạch gỗ thô dạng vòng tương tự sồi nhưng không có tia gỗ nổi hạt vảy bạc.",
+        "usage": "Thùng ủ rượu vang truyền thống, cột kèo nhà cổ, đồ gỗ ngoài trời chống mục.",
+        "density": "560 kg/m³"
+      },
+      "predictions": [
+        {
+          "class_id": 4,
+          "name": "Gỗ Dẻ Trùng Khánh (Castanea)",
+          "scientific": "Castanea sativa",
+          "probability": 0.36242443323135376
+        },
+        {
+          "class_id": 10,
+          "name": "Gỗ Bạch Dương Rung (Aspen)",
+          "scientific": "Populus tremula",
+          "probability": 0.27880558371543884
+        },
+        {
+          "class_id": 3,
+          "name": "Gỗ Anh Đào Dại (Cherry)",
+          "scientific": "Prunus avium",
+          "probability": 0.1266368180513382
+        },
+        {
+          "class_id": 8,
+          "name": "Gỗ Thông Scots",
+          "scientific": "Pinus sylvestris",
+          "probability": 0.053353797644376755
+        }
+      ],
+      "is_correct": true,
+      "confidence": 0.36242443323135376
+    },
+    {
+      "id": 5,
+      "filename": "sample_5.jpg",
+      "cam_filename": "cam_5.jpg",
+      "species": {
+        "id": 5,
+        "scientific": "Pseudotsuga menziesii",
+        "common_en": "Douglas Fir",
+        "common_vi": "Gỗ Thông Douglas",
+        "type": "Gỗ mềm (Softwood lá kim)",
+        "porosity": "Gỗ không lỗ mạch (Non-porous/Gymnosperm)",
+        "grain": "Vòng sinh trưởng mùa xuân/thu tương phản cực mạnh, vân dải sọc thẳng tắp.",
+        "usage": "Kết cấu xây dựng chịu lực, xà gồ nhịp lớn, ván ép cốp pha chất lượng cao.",
+        "density": "530 kg/m³"
+      },
+      "predictions": [
+        {
+          "class_id": 5,
+          "name": "Gỗ Thông Douglas",
+          "scientific": "Pseudotsuga menziesii",
+          "probability": 0.8134235739707947
+        },
+        {
+          "class_id": 9,
+          "name": "Gỗ Ti Trăn Phương Đông",
+          "scientific": "Platanus orientalis",
+          "probability": 0.07143989950418472
+        },
+        {
+          "class_id": 12,
+          "name": "Gỗ Óc Chó Phương Tây (Walnut)",
+          "scientific": "Juglans regia",
+          "probability": 0.0699651837348938
+        },
+        {
+          "class_id": 8,
+          "name": "Gỗ Thông Scots",
+          "scientific": "Pinus sylvestris",
+          "probability": 0.007590897846966982
+        }
+      ],
+      "is_correct": true,
+      "confidence": 0.8134235739707947
+    },
+    {
+      "id": 6,
+      "filename": "sample_6.jpg",
+      "cam_filename": "cam_6.jpg",
+      "species": {
+        "id": 6,
+        "scientific": "Larix decidua",
+        "common_en": "European Larch",
+        "common_vi": "Gỗ Thông Rụng Lá Châu Âu",
+        "type": "Gỗ mềm (Softwood chịu nước)",
+        "porosity": "Gỗ lá kim (Gymnosperm)",
+        "grain": "Vân dạng dải hẹp, màu nâu đỏ đậm dần về tâm, rất giàu tinh dầu nhựa tự nhiên.",
+        "usage": "Ốp tường ngoại thất chịu mưa nắng, du thuyền, cầu cảng, ván sàn ban công.",
+        "density": "590 kg/m³"
+      },
+      "predictions": [
+        {
+          "class_id": 1,
+          "name": "Gỗ Dẻ Gai Châu Âu",
+          "scientific": "Fagus sylvatica",
+          "probability": 0.5439249277114868
+        },
+        {
+          "class_id": 6,
+          "name": "Gỗ Thông Rụng Lá Châu Âu",
+          "scientific": "Larix decidua",
+          "probability": 0.21142509579658508
+        },
+        {
+          "class_id": 4,
+          "name": "Gỗ Dẻ Trùng Khánh (Castanea)",
+          "scientific": "Castanea sativa",
+          "probability": 0.08876200765371323
+        },
+        {
+          "class_id": 9,
+          "name": "Gỗ Ti Trăn Phương Đông",
+          "scientific": "Platanus orientalis",
+          "probability": 0.03518198803067207
+        }
+      ],
+      "is_correct": false,
+      "confidence": 0.5439249277114868
+    },
+    {
+      "id": 7,
+      "filename": "sample_7.jpg",
+      "cam_filename": "cam_7.jpg",
+      "species": {
+        "id": 7,
+        "scientific": "Quercus robur",
+        "common_en": "English Oak",
+        "common_vi": "Gỗ Sồi Châu Âu (Sồi Trắng)",
+        "type": "Gỗ cứng (Hardwood danh tiếng)",
+        "porosity": "Lỗ mạch dạng vòng (Ring-porous)",
+        "grain": "Tia gỗ lớn đặc trưng dạng vệt bạc (medullary rays), tom gỗ thô sang trọng.",
+        "usage": "Nội thất hoàng gia, sàn sồi tự nhiên, thùng ủ whisky và cognac trứ danh.",
+        "density": "720 kg/m³"
+      },
+      "predictions": [
+        {
+          "class_id": 7,
+          "name": "Gỗ Sồi Châu Âu (Sồi Trắng)",
+          "scientific": "Quercus robur",
+          "probability": 0.6382824778556824
+        },
+        {
+          "class_id": 8,
+          "name": "Gỗ Thông Scots",
+          "scientific": "Pinus sylvestris",
+          "probability": 0.18107205629348755
+        },
+        {
+          "class_id": 6,
+          "name": "Gỗ Thông Rụng Lá Châu Âu",
+          "scientific": "Larix decidua",
+          "probability": 0.045863669365644455
+        },
+        {
+          "class_id": 11,
+          "name": "Gỗ Cây Thiên Đường (Ailanthus)",
+          "scientific": "Ailanthus altissima",
+          "probability": 0.03240744769573212
+        }
+      ],
+      "is_correct": true,
+      "confidence": 0.6382824778556824
+    },
+    {
+      "id": 8,
+      "filename": "sample_8.jpg",
+      "cam_filename": "cam_8.jpg",
+      "species": {
+        "id": 8,
+        "scientific": "Pinus sylvestris",
+        "common_en": "Scots Pine",
+        "common_vi": "Gỗ Thông Scots",
+        "type": "Gỗ mềm (Softwood phổ biến)",
+        "porosity": "Gỗ lá kim có ống nhựa (Resin canals)",
+        "grain": "Vân xoắn nhẹ, có mắt gỗ tròn tự nhiên, viền mùa muộn màu nâu sẫm rõ ràng.",
+        "usage": "Đồ nội thất gia đình Scandinavian, thùng bao bì mộc, cấu kiện nhà gỗ.",
+        "density": "510 kg/m³"
+      },
+      "predictions": [
+        {
+          "class_id": 8,
+          "name": "Gỗ Thông Scots",
+          "scientific": "Pinus sylvestris",
+          "probability": 0.999244213104248
+        },
+        {
+          "class_id": 6,
+          "name": "Gỗ Thông Rụng Lá Châu Âu",
+          "scientific": "Larix decidua",
+          "probability": 0.00019781581067945808
+        },
+        {
+          "class_id": 11,
+          "name": "Gỗ Cây Thiên Đường (Ailanthus)",
+          "scientific": "Ailanthus altissima",
+          "probability": 0.0001670998171903193
+        },
+        {
+          "class_id": 10,
+          "name": "Gỗ Bạch Dương Rung (Aspen)",
+          "scientific": "Populus tremula",
+          "probability": 0.00016150338342413306
+        }
+      ],
+      "is_correct": true,
+      "confidence": 0.999244213104248
+    },
+    {
+      "id": 9,
+      "filename": "sample_9.jpg",
+      "cam_filename": "cam_9.jpg",
+      "species": {
+        "id": 9,
+        "scientific": "Platanus orientalis",
+        "common_en": "Oriental Plane",
+        "common_vi": "Gỗ Ti Trăn Phương Đông",
+        "type": "Gỗ cứng (Hardwood)",
+        "porosity": "Lỗ mạch phân tán (Diffuse-porous)",
+        "grain": "Vân đốm vảy báo (lacewood / ray flecks) lấp lánh phản quang khi xẻ tiếp tuyến.",
+        "usage": "Veneer trang trí siêu xe, báng súng thể thao, cần đàn guitar, đồ khảm xà cừ.",
+        "density": "620 kg/m³"
+      },
+      "predictions": [
+        {
+          "class_id": 9,
+          "name": "Gỗ Ti Trăn Phương Đông",
+          "scientific": "Platanus orientalis",
+          "probability": 0.900999903678894
+        },
+        {
+          "class_id": 5,
+          "name": "Gỗ Thông Douglas",
+          "scientific": "Pseudotsuga menziesii",
+          "probability": 0.03032124787569046
+        },
+        {
+          "class_id": 3,
+          "name": "Gỗ Anh Đào Dại (Cherry)",
+          "scientific": "Prunus avium",
+          "probability": 0.017360655590891838
+        },
+        {
+          "class_id": 7,
+          "name": "Gỗ Sồi Châu Âu (Sồi Trắng)",
+          "scientific": "Quercus robur",
+          "probability": 0.013951133005321026
+        }
+      ],
+      "is_correct": true,
+      "confidence": 0.900999903678894
+    },
+    {
+      "id": 10,
+      "filename": "sample_10.jpg",
+      "cam_filename": "cam_10.jpg",
+      "species": {
+        "id": 10,
+        "scientific": "Populus tremula",
+        "common_en": "Aspen / Poplar",
+        "common_vi": "Gỗ Bạch Dương Rung (Aspen)",
+        "type": "Gỗ cứng mềm (Soft Hardwood)",
+        "porosity": "Lỗ mạch phân tán rất mịn",
+        "grain": "Vân mờ nhạt, đồng nhất, bề mặt thớ mịn xốp, không có mùi nhựa hay tannin.",
+        "usage": "Phòng xông hơi Sauna (cách nhiệt, không bỏng da), que diêm, đũa ăn, bột giấy.",
+        "density": "450 kg/m³"
+      },
+      "predictions": [
+        {
+          "class_id": 10,
+          "name": "Gỗ Bạch Dương Rung (Aspen)",
+          "scientific": "Populus tremula",
+          "probability": 0.9894232153892517
+        },
+        {
+          "class_id": 3,
+          "name": "Gỗ Anh Đào Dại (Cherry)",
+          "scientific": "Prunus avium",
+          "probability": 0.0023800714407116175
+        },
+        {
+          "class_id": 8,
+          "name": "Gỗ Thông Scots",
+          "scientific": "Pinus sylvestris",
+          "probability": 0.0023752632550895214
+        },
+        {
+          "class_id": 4,
+          "name": "Gỗ Dẻ Trùng Khánh (Castanea)",
+          "scientific": "Castanea sativa",
+          "probability": 0.0016092341393232346
+        }
+      ],
+      "is_correct": true,
+      "confidence": 0.9894232153892517
+    },
+    {
+      "id": 11,
+      "filename": "sample_11.jpg",
+      "cam_filename": "cam_11.jpg",
+      "species": {
+        "id": 11,
+        "scientific": "Ailanthus altissima",
+        "common_en": "Tree of Heaven",
+        "common_vi": "Gỗ Cây Thiên Đường (Ailanthus)",
+        "type": "Gỗ cứng (Hardwood)",
+        "porosity": "Lỗ mạch dạng vòng thô",
+        "grain": "Vân thô ráp, lỗ mạch lớn tương tự tần bì (ash), bề mặt gân guốc khỏe khoắn.",
+        "usage": "Đồ mộc gia dụng, đồ gỗ trang trí rustic, pallet chịu tải, tay vịn cầu thang.",
+        "density": "580 kg/m³"
+      },
+      "predictions": [
+        {
+          "class_id": 11,
+          "name": "Gỗ Cây Thiên Đường (Ailanthus)",
+          "scientific": "Ailanthus altissima",
+          "probability": 0.9489830732345581
+        },
+        {
+          "class_id": 10,
+          "name": "Gỗ Bạch Dương Rung (Aspen)",
+          "scientific": "Populus tremula",
+          "probability": 0.015230963937938213
+        },
+        {
+          "class_id": 8,
+          "name": "Gỗ Thông Scots",
+          "scientific": "Pinus sylvestris",
+          "probability": 0.012298163026571274
+        },
+        {
+          "class_id": 12,
+          "name": "Gỗ Óc Chó Phương Tây (Walnut)",
+          "scientific": "Juglans regia",
+          "probability": 0.004276914522051811
+        }
+      ],
+      "is_correct": true,
+      "confidence": 0.9489830732345581
+    },
+    {
+      "id": 12,
+      "filename": "sample_12.jpg",
+      "cam_filename": "cam_12.jpg",
+      "species": {
+        "id": 12,
+        "scientific": "Juglans regia",
+        "common_en": "Persian Walnut",
+        "common_vi": "Gỗ Óc Chó Phương Tây (Walnut)",
+        "type": "Gỗ cứng (Hardwood quý tộc)",
+        "porosity": "Lỗ mạch bán vòng (Semi-ring-porous)",
+        "grain": "Vân cuộn sóng, xoáy ảo diệu, dải màu socola từ nâu socola nhạt đến tím sẫm.",
+        "usage": "Nội thất siêu xe Rolls-Royce/Bentley, báng súng săn cao cấp, bàn hội nghị.",
+        "density": "640 kg/m³"
+      },
+      "predictions": [
+        {
+          "class_id": 12,
+          "name": "Gỗ Óc Chó Phương Tây (Walnut)",
+          "scientific": "Juglans regia",
+          "probability": 0.9055975675582886
+        },
+        {
+          "class_id": 5,
+          "name": "Gỗ Thông Douglas",
+          "scientific": "Pseudotsuga menziesii",
+          "probability": 0.042152680456638336
+        },
+        {
+          "class_id": 1,
+          "name": "Gỗ Dẻ Gai Châu Âu",
+          "scientific": "Fagus sylvatica",
+          "probability": 0.01166123989969492
+        },
+        {
+          "class_id": 2,
+          "name": "Gỗ Keo Dậu Hoa Trắng",
+          "scientific": "Robinia pseudoacacia",
+          "probability": 0.009911373257637024
+        }
+      ],
+      "is_correct": true,
+      "confidence": 0.9055975675582886
+    }
+  ]
+}

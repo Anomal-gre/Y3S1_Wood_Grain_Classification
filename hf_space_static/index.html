@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hệ Thống Phân Loại Loài Gỗ | Đánh Giá Đồng Thời 4 Mô Hình | INT3401</title>
+  <meta name="description" content="Nghiên cứu phân loại 12 loài gỗ châu Âu thông qua mạng học sâu ResNet-18, Baseline SVM, ResNet-50 và ConvNeXt-Tiny với giải thích trực quan Grad-CAM.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="navbar">
+    <div class="container nav-content">
+      <a href="#" class="brand">
+        <div class="brand-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div>
+          <span class="brand-title">WoodGrain-AI</span>
+          <span class="brand-pill">INT3401 Lớp 11</span>
+        </div>
+      </a>
+      <nav class="nav-links">
+        <a href="#explorer">Nhận Diện Mô Hình</a>
+        <a href="#gradcam">Grad-CAM XAI</a>
+        <a href="#benchmarks">Bảng Đối Chuẩn</a>
+        <a href="https://huggingface.co/spaces/AnomalGreatad/wood-grain-classification" target="_blank" class="btn-space-link">
+          <span>Hugging Face Space</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="container">
+    <section class="hero">
+      <div class="hero-badge">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>
+        <span>Deep Transfer Learning & Explainable AI Architecture</span>
+      </div>
+      <h1 class="hero-title">
+        Phân Loại Loài Gỗ & <br><span class="gradient-text">Đánh Giá Đồng Thời 4 Mô Hình</span>
+      </h1>
+      <p class="hero-subtitle">
+        Hệ thống tích hợp quy trình chạy song song đồng thời 4 mô hình: <strong>ResNet-18</strong>, <strong>Baseline LBP + GLCM + SVM</strong>, <strong>ResNet-50</strong>, và <strong>ConvNeXt-Tiny</strong> trên cùng một mẫu ảnh thớ gỗ để so sánh độ chính xác và khả năng nhận diện.
+      </p>
+
+      <!-- KPI Floating Stats Bar (inspired by bottom stats in reference image) -->
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-icon-pill">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div>
+            <div class="kpi-num">92.74%</div>
+            <div class="kpi-desc">Accuracy (ResNet-18)</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-pill">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>
+          </div>
+          <div>
+            <div class="kpi-num">92.57%</div>
+            <div class="kpi-desc">Macro-F1 (Tập Test Độc Lập)</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-pill">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <div class="kpi-num">14.73ms</div>
+            <div class="kpi-desc">Độ trễ suy luận trên CPU</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-pill">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          </div>
+          <div>
+            <div class="kpi-num">4 Models</div>
+            <div class="kpi-desc">Chạy song song đồng thời</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Explorer Section -->
+    <section id="explorer" class="section">
+      <div class="section-header">
+        <div class="section-tag">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2M15 20v2M2 15h2M2 9h2M20 15h2M20 9h2M9 2v2M9 20v2"/></svg>
+          <span>Simultaneous Multi-Model Matrix</span>
+        </div>
+        <h2 class="section-title">Nhận Diện Đồng Thời Trên Cùng Mẫu Ảnh</h2>
+        <p class="section-desc">Chọn một mẫu gỗ từ tập kiểm thử hoặc tải lên ảnh chụp cận cảnh của bạn. Cả 4 mô hình sẽ tiến hành phân tích độc lập và hiển thị kết quả đối sánh song song.</p>
+      </div>
+
+      <!-- Mode Notification Banner -->
+      <div class="matrix-mode-banner">
+        <div class="mode-banner-left">
+          <div class="mode-icon-circle">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          </div>
+          <div>
+            <div class="mode-title">Chế Độ: Chạy Đồng Thời Toàn Bộ Mô Hình</div>
+            <div class="mode-sub">
+              Phân tích song song bởi: ResNet-18, Baseline LBP + GLCM + SVM, ResNet-50, và ConvNeXt-Tiny
+            </div>
+          </div>
+        </div>
+        <div class="mode-status-pill">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>4 Mô Hình Đang Kích Hoạt</span>
+        </div>
+      </div>
+
+      <!-- Source Navigation Tabs (Library vs Upload) -->
+      <div class="source-tabs-bar">
+        <button class="source-tab-btn active" id="tab-library-btn" onclick="switchSourceTab('library')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          <span>Thư Viện 12 Loài Kiểm Thử</span>
+        </button>
+        <button class="source-tab-btn" id="tab-upload-btn" onclick="switchSourceTab('upload')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+          <span>Tải Ảnh Của Bạn Lên</span>
+        </button>
+      </div>
+
+      <!-- TAB 1: LIBRARY SAMPLES CONTAINER -->
+      <div id="library-container">
+        <!-- Species Selector Chips -->
+        <div class="species-chips-track" id="species-selector-container"></div>
+
+        <!-- Upper Grid: Viewer + Botanical Details -->
+        <div class="explorer-top-grid">
+          <!-- Left: Dual Image Viewer -->
+          <div class="image-viewer-column">
+            <div class="dual-image-frame" id="dual-frame">
+              <span class="viewer-pill-badge">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>
+                <span>Ảnh Gốc & Heatmap Grad-CAM</span>
+              </span>
+              <img src="assets/samples/sample_1.jpg" alt="Wood Grain Base" class="viewer-base-img" id="viewer-base">
+              <img src="assets/cams/cam_1.jpg" alt="Grad-CAM Overlay" class="viewer-cam-img" id="viewer-cam" style="opacity: 0.5;">
+            </div>
+
+            <div class="opacity-slider-box">
+              <div class="slider-info-row">
+                <span>Độ trong suốt Grad-CAM Heatmap</span>
+                <span id="slider-val">50%</span>
+              </div>
+              <input type="range" min="0" max="100" value="50" class="slider-input" id="cam-slider">
+            </div>
+          </div>
+
+          <!-- Right: Botanical Facts -->
+          <div class="facts-column">
+            <div class="species-title-group">
+              <span class="type-pill" id="detail-type-badge">Gỗ cứng (Hardwood)</span>
+              <h3 class="species-heading" id="detail-title">Gỗ Dẻ Gai Châu Âu</h3>
+              <p class="species-sub-sci" id="detail-scientific">Fagus sylvatica (European Beech)</p>
+            </div>
+
+            <div class="facts-grid">
+              <div class="fact-tile">
+                <div class="fact-tile-label">Cấu trúc lỗ mạch</div>
+                <div class="fact-tile-val" id="fact-porosity">Lỗ mạch phân tán (Diffuse-porous)</div>
+              </div>
+              <div class="fact-tile">
+                <div class="fact-tile-label">Khối lượng riêng</div>
+                <div class="fact-tile-val" id="fact-density">710 kg/m³</div>
+              </div>
+              <div class="fact-tile fact-tile-full">
+                <div class="fact-tile-label">Đặc trưng thớ gỗ vi mô</div>
+                <div class="fact-tile-val" id="fact-grain">Thớ mịn, thẳng, tia gỗ ngắn dạng đốm nâu li ti phân bố đều.</div>
+              </div>
+              <div class="fact-tile fact-tile-full">
+                <div class="fact-tile-label">Ứng dụng chế tác mộc</div>
+                <div class="fact-tile-val" id="fact-usage">Nội thất cao cấp, sàn gỗ, đồ chơi mộc, cán công cụ.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LOWER SECTION: 4-MODEL SIMULTANEOUS RESULTS FOR LIBRARY SAMPLE -->
+        <div class="consensus-card">
+          <div class="consensus-left">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Độ đồng thuận giữa các mô hình: <strong class="consensus-count-highlight" id="lib-consensus-text">4/4 Mô hình</strong></span>
+          </div>
+          <div class="consensus-badge-pill" id="lib-consensus-species">Gỗ Dẻ Gai Châu Âu</div>
+        </div>
+
+        <!-- 4-Column Grid -->
+        <div class="multi-model-grid" id="lib-multi-model-grid"></div>
+      </div>
+
+      <!-- TAB 2: CUSTOM IMAGE UPLOAD CONTAINER -->
+      <div id="upload-container" class="upload-view-card">
+        <!-- Left: Upload Dropzone & Canvas Preview -->
+        <div class="image-viewer-column">
+          <div class="upload-dropzone" id="dropzone" onclick="document.getElementById('custom-file-input').click()">
+            <div class="upload-icon-circle">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+            </div>
+            <div class="upload-title">Kéo thả ảnh thớ gỗ vào đây</div>
+            <div class="upload-hint">Hỗ trợ các định dạng JPG, JPEG, PNG, WEBP (Khuyên dùng ảnh chụp cận cảnh macro)</div>
+            <button type="button" class="btn-select-file">Chọn Tệp Từ Máy Tính</button>
+            <input type="file" id="custom-file-input" accept="image/*" style="display: none;" onchange="handleFileUpload(event)">
+          </div>
+
+          <!-- Preview & Canvas Frame -->
+          <div class="dual-image-frame" id="upload-preview-frame" style="display: none;">
+            <span class="viewer-pill-badge">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>
+              <span>Ảnh Đã Tải Lên</span>
+            </span>
+            <img id="upload-preview-img" class="viewer-base-img" src="" alt="Uploaded Wood">
+            <canvas id="upload-cam-canvas" class="viewer-cam-img" style="opacity: 0.55; display: none;"></canvas>
+          </div>
+
+          <button type="button" class="btn-run-all-models" id="btn-run-inference" style="display: none;" onclick="analyzeUploadedImage()">
+            <span>Chạy Đồng Thời 4 Mô Hình Nhận Diện</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+
+        <!-- Right: Upload Match Facts -->
+        <div class="facts-column" id="upload-results-panel">
+          <div id="upload-placeholder-msg" style="text-align: center; padding: 45px 20px; color: var(--text-muted);">
+            <div class="upload-icon-circle" style="margin: 0 auto 14px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            </div>
+            <h4 style="color: var(--text-primary); margin-bottom: 6px; font-weight: 800;">Chưa có ảnh nào được tải lên</h4>
+            <p style="font-size: 0.88rem;">Vui lòng chọn hoặc kéo thả một bức ảnh thớ gỗ từ máy tính để cả 4 mô hình cùng nhận diện song song.</p>
+          </div>
+
+          <!-- Active Result Content (Hidden until analysis) -->
+          <div id="upload-active-results" style="display: none;">
+            <div class="species-title-group">
+              <span class="type-pill" id="up-type-badge">Gỗ cứng (Hardwood)</span>
+              <h3 class="species-heading" id="up-title">Kết Quả Nhận Diện</h3>
+              <p class="species-sub-sci" id="up-scientific">Tên khoa học</p>
+            </div>
+
+            <div class="facts-grid" style="margin-top: 14px;">
+              <div class="fact-tile">
+                <div class="fact-tile-label">Cấu trúc lỗ mạch</div>
+                <div class="fact-tile-val" id="up-porosity">-</div>
+              </div>
+              <div class="fact-tile">
+                <div class="fact-tile-label">Khối lượng riêng</div>
+                <div class="fact-tile-val" id="up-density">-</div>
+              </div>
+              <div class="fact-tile fact-tile-full">
+                <div class="fact-tile-label">Đặc trưng thớ gỗ nhận diện</div>
+                <div class="fact-tile-val" id="up-grain">-</div>
+              </div>
+              <div class="fact-tile fact-tile-full">
+                <div class="fact-tile-label">Ứng dụng chế tác lâm sản</div>
+                <div class="fact-tile-val" id="up-usage">-</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LOWER SECTION FOR UPLOAD VIEW: 4-MODEL SIMULTANEOUS RESULTS -->
+        <div id="upload-models-wrapper" style="grid-column: 1 / -1; display: none; margin-top: 20px;">
+          <div class="consensus-card">
+            <div class="consensus-left">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Độ đồng thuận giữa các mô hình: <strong class="consensus-count-highlight" id="up-consensus-text">4/4 Mô hình</strong></span>
+            </div>
+            <div class="consensus-badge-pill" id="up-consensus-species">-</div>
+          </div>
+
+          <div class="multi-model-grid" id="up-multi-model-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Grad-CAM Deep Dive -->
+    <section id="gradcam" class="section">
+      <div class="section-header">
+        <div class="section-tag">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>
+          <span>Explainable AI (XAI)</span>
+        </div>
+        <h2 class="section-title">Giải Thích Quyết Định Bằng Grad-CAM</h2>
+        <p class="section-desc">Mô hình ResNet-18 đã học được những đặc trưng sinh học nào? Grad-CAM trên lớp <code>layer4</code> chiếu sáng chính xác các tia gỗ (medullary rays) và mạch gỗ (vessels).</p>
+      </div>
+
+      <div class="figure-card">
+        <div class="figure-img-wrap" onclick="openModal('assets/figures/gradcam_gallery.png')">
+          <img src="assets/figures/gradcam_gallery.png" alt="Grad-CAM Gallery" loading="lazy">
+        </div>
+        <div class="figure-caption">
+          <h4>Trực Quan Hóa Grad-CAM Trên 8 Mẫu Thử Nghiệm Đại Diện</h4>
+          <p>Hàng trên hiển thị các mẫu phân loại chính xác: vùng đỏ tập trung dọc theo các tia gỗ phản quang (Gỗ Ti trăn, Sồi) và ranh giới sinh trưởng mùa xuân/thu (Gỗ Thông Douglas). Hàng dưới minh họa các trường hợp nhầm lẫn giữa các loài có cấu trúc vi mô tương đồng cao (Dẻ gai vs Sồi khi thiếu tia gỗ).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Benchmarks Section -->
+    <section id="benchmarks" class="section">
+      <div class="section-header">
+        <div class="section-tag">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          <span>Empirical Evaluation Benchmark</span>
+        </div>
+        <h2 class="section-title">Bảng Đối Chuẩn Toàn Diện Các Mô Hình</h2>
+        <p class="section-desc">Đánh giá thực nghiệm khách quan trên 2.836 ảnh Test độc lập không rò rỉ dữ liệu (Stratified Non-leaking Split).</p>
+      </div>
+
+      <!-- Comparative Figures -->
+      <div class="figures-grid">
+        <div class="figure-card">
+          <div class="figure-img-wrap" onclick="openModal('assets/figures/resnet18_color_aug_confusion_matrix.png')">
+            <img src="assets/figures/resnet18_color_aug_confusion_matrix.png" alt="Confusion Matrix" loading="lazy">
+          </div>
+          <div class="figure-caption">
+            <h4>Ma Trận Nhầm Lẫn (Confusion Matrix - 12 Loài)</h4>
+            <p>Đường chéo chính chiếm đa số tuyệt đối với độ chính xác trung bình 92.74%. Hầu hết các loài thông (Scots Pine, Douglas Fir, Larch) đạt độ nhạy trên 95%.</p>
+          </div>
+        </div>
+
+        <div class="figure-card">
+          <div class="figure-img-wrap" onclick="openModal('assets/figures/resnet18_color_aug_robustness_test.png')">
+            <img src="assets/figures/resnet18_color_aug_robustness_test.png" alt="Robustness Benchmark" loading="lazy">
+          </div>
+          <div class="figure-caption">
+            <h4>Kiểm Thử Độ Bền Vững Màu Sắc (Color Shift Robustness)</h4>
+            <p>Đánh giá tính bền bỉ trước 7 điều kiện ánh sáng môi trường thực tế (Grayscale, Desaturate, Hue ±0.2, Dark, Bright). Mô hình duy trì F1 > 78% ngay cả khi lệch màu mạnh.</p>
+          </div>
+        </div>
+
+        <div class="figure-card">
+          <div class="figure-img-wrap" onclick="openModal('assets/figures/resnet18_color_aug_learning_curves.png')">
+            <img src="assets/figures/resnet18_color_aug_learning_curves.png" alt="Learning Curves" loading="lazy">
+          </div>
+          <div class="figure-caption">
+            <h4>Đường Cong Học Hai Giai Đoạn (Two-Stage Training)</h4>
+            <p>Giai đoạn 1 (Warm-up 5 epochs, đóng băng backbone) giúp hội tụ đầu phân loại ổn định. Giai đoạn 2 (Fine-tuning 10 epochs với lr thấp) tối ưu hóa toàn diện biểu diễn thớ gỗ.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Full Comparison Table -->
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Tên Mô Hình</th>
+              <th>Chiến Lược Huấn Luyện</th>
+              <th>Độ Chính Xác (Accuracy)</th>
+              <th>Macro-F1 Score</th>
+              <th>Độ Trễ CPU</th>
+              <th>Đặc Điểm & Nhận Xét</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Baseline LBP + GLCM + SVM</strong></td>
+              <td>Trích xuất 64 chiều texture + RBF Kernel</td>
+              <td>80.99%</td>
+              <td>78.92%</td>
+              <td>0.36 ms/ảnh</td>
+              <td>Tốc độ rất nhanh nhưng F1 thấp hơn -13.65% do đặc trưng thủ công dễ bão hòa.</td>
+            </tr>
+            <tr>
+              <td><strong>ResNet-18 (Giai đoạn 1)</strong></td>
+              <td>Chỉ tinh chỉnh Head, đóng băng ImageNet</td>
+              <td>86.10%</td>
+              <td>85.40%</td>
+              <td>14.73 ms/ảnh</td>
+              <td>Trọng số ImageNet ban đầu chỉ nhận diện vật thể thông thường, cần fine-tune để học cấu trúc vi mô.</td>
+            </tr>
+            <tr class="highlight-row">
+              <td><strong>ResNet-18 (Mô Hình Đề Xuất)</strong></td>
+              <td>Two-Stage + Color Augmentation</td>
+              <td>92.74%</td>
+              <td>92.57%</td>
+              <td>14.73 ms/ảnh</td>
+              <td>Điểm tối ưu Pareto: Độ chính xác cao, kích thước nhẹ (43 MB), tốc độ thời gian thực trên CPU.</td>
+            </tr>
+            <tr>
+              <td><strong>ResNet-50</strong></td>
+              <td>Two-Stage + Color Augmentation</td>
+              <td>93.41%</td>
+              <td>93.15%</td>
+              <td>32.40 ms/ảnh</td>
+              <td>F1 tăng nhẹ +0.58% nhưng độ trễ CPU tăng hơn 2.2 lần (32.4 ms so với 14.7 ms).</td>
+            </tr>
+            <tr>
+              <td><strong>ConvNeXt-Tiny</strong></td>
+              <td>Depthwise Sep Conv + 7x7 Kernels</td>
+              <td>93.85%</td>
+              <td>93.52%</td>
+              <td>38.10 ms/ảnh</td>
+              <td>Độ chính xác cao nhất (+0.95% F1) nhưng mô hình nặng và độ trễ CPU cao hơn 2.6 lần.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Image Zoom Modal -->
+  <div class="modal" id="image-modal" onclick="closeModal()">
+    <img src="" id="modal-img" alt="Zoomed View">
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p><strong>BTL Học Máy (INT3401) – Lớp 11</strong> | Nhóm 11: Nghiên cứu phân loại kết cấu vân gỗ bằng Deep Transfer Learning.</p>
+      <p style="margin-top: 6px;">Trường Đại học Công nghệ, Đại học Quốc gia Hà Nội (VNU - UET). Dữ liệu nghiên cứu: <a href="https://doi.org/10.5281/zenodo.2545611" target="_blank">WOOD-AUTH Benchmark (Barmpoutis 2018)</a>.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
