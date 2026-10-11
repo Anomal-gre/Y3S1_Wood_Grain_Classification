@@ -1,0 +1,10 @@
+# Hugging Face Spaces requirements (Linux CPU)
+torch>=2.0.0
+torchvision>=0.15.0
+streamlit>=1.35.0
+numpy>=1.26.0
+pandas>=2.2.0
+matplotlib>=3.8.0
+Pillow>=10.2.0
+PyYAML>=6.0.1
+opencv-python-headless>=4.9.0

@@ -1,0 +1,47 @@
+[2026-10-11 08:18:23] [INFO] resnet18_color_aug: Loaded config from configs/resnet18.yaml
+[2026-10-11 08:18:23] [INFO] resnet18_color_aug: Random seed set to 42
+[2026-10-11 08:18:23] [INFO] resnet18_color_aug: Using compute device: cpu
+[2026-10-11 08:18:23] [INFO] resnet18_color_aug: Train samples: 4566, Val samples: 1142
+[2026-10-11 08:18:23] [INFO] resnet18_color_aug: ============================================================
+[2026-10-11 08:18:23] [INFO] resnet18_color_aug: STARTING STAGE 1: Head Warm-up (5 epochs, backbone frozen)
+[2026-10-11 08:18:23] [INFO] resnet18_color_aug: ============================================================
+[2026-10-11 08:20:34] [INFO] resnet18_color_aug: Stage 1 [Epoch 1/5] (131.2s) - Train Loss: 2.2040, Acc: 28.15%, F1: 19.36% | Val Loss: 1.9165, Acc: 39.40%, F1: 22.11%
+[2026-10-11 08:20:34] [INFO] resnet18_color_aug:  -> Checkpoint saved (Val Macro-F1: 22.11%)
+[2026-10-11 08:22:46] [INFO] resnet18_color_aug: Stage 1 [Epoch 2/5] (131.9s) - Train Loss: 1.9357, Acc: 39.48%, F1: 31.04% | Val Loss: 1.6982, Acc: 48.25%, F1: 38.34%
+[2026-10-11 08:22:46] [INFO] resnet18_color_aug:  -> Checkpoint saved (Val Macro-F1: 38.34%)
+[2026-10-11 08:24:46] [INFO] resnet18_color_aug: Stage 1 [Epoch 3/5] (119.7s) - Train Loss: 1.8596, Acc: 42.76%, F1: 35.93% | Val Loss: 1.6015, Acc: 53.85%, F1: 44.61%
+[2026-10-11 08:24:46] [INFO] resnet18_color_aug:  -> Checkpoint saved (Val Macro-F1: 44.61%)
+[2026-10-11 08:26:45] [INFO] resnet18_color_aug: Stage 1 [Epoch 4/5] (118.8s) - Train Loss: 1.8252, Acc: 44.04%, F1: 38.22% | Val Loss: 1.5729, Acc: 57.79%, F1: 51.90%
+[2026-10-11 08:26:45] [INFO] resnet18_color_aug:  -> Checkpoint saved (Val Macro-F1: 51.90%)
+[2026-10-11 08:28:36] [INFO] resnet18_color_aug: Stage 1 [Epoch 5/5] (111.6s) - Train Loss: 1.8086, Acc: 43.84%, F1: 38.58% | Val Loss: 1.5481, Acc: 58.93%, F1: 53.57%
+[2026-10-11 08:28:36] [INFO] resnet18_color_aug:  -> Checkpoint saved (Val Macro-F1: 53.57%)
+[2026-10-11 08:28:36] [INFO] resnet18_color_aug: ============================================================
+[2026-10-11 08:28:36] [INFO] resnet18_color_aug: STARTING STAGE 2: Full Fine-Tuning (10 epochs, backbone unfrozen)
+[2026-10-11 08:28:36] [INFO] resnet18_color_aug: Differential LRs: Backbone = 0.0001, Head = 0.001
+[2026-10-11 08:28:36] [INFO] resnet18_color_aug: ============================================================
+[2026-10-11 08:32:58] [INFO] resnet18_color_aug: Stage 2 [Epoch 6/15] (261.2s) - Train Loss: 1.5650, Acc: 56.36%, F1: 51.10% | Val Loss: 1.1014, Acc: 76.27%, F1: 72.97%
+[2026-10-11 08:32:58] [INFO] resnet18_color_aug:  -> Checkpoint saved (New Best Val Macro-F1: 72.97%)
+[2026-10-11 08:37:35] [INFO] resnet18_color_aug: Stage 2 [Epoch 7/15] (277.2s) - Train Loss: 1.1813, Acc: 73.55%, F1: 70.08% | Val Loss: 0.9340, Acc: 85.64%, F1: 83.55%
+[2026-10-11 08:37:35] [INFO] resnet18_color_aug:  -> Checkpoint saved (New Best Val Macro-F1: 83.55%)
+[2026-10-11 08:42:11] [INFO] resnet18_color_aug: Stage 2 [Epoch 8/15] (276.3s) - Train Loss: 1.0570, Acc: 79.09%, F1: 76.96% | Val Loss: 0.9062, Acc: 85.81%, F1: 84.60%
+[2026-10-11 08:42:11] [INFO] resnet18_color_aug:  -> Checkpoint saved (New Best Val Macro-F1: 84.60%)
+[2026-10-11 08:46:36] [INFO] resnet18_color_aug: Stage 2 [Epoch 9/15] (264.6s) - Train Loss: 0.9820, Acc: 82.68%, F1: 81.17% | Val Loss: 0.7998, Acc: 91.16%, F1: 89.49%
+[2026-10-11 08:46:36] [INFO] resnet18_color_aug:  -> Checkpoint saved (New Best Val Macro-F1: 89.49%)
+[2026-10-11 08:51:08] [INFO] resnet18_color_aug: Stage 2 [Epoch 10/15] (272.0s) - Train Loss: 0.9179, Acc: 85.39%, F1: 83.98% | Val Loss: 0.7689, Acc: 91.77%, F1: 90.90%
+[2026-10-11 08:51:08] [INFO] resnet18_color_aug:  -> Checkpoint saved (New Best Val Macro-F1: 90.90%)
+[2026-10-11 08:55:46] [INFO] resnet18_color_aug: Stage 2 [Epoch 11/15] (277.8s) - Train Loss: 0.8767, Acc: 87.32%, F1: 86.35% | Val Loss: 0.7294, Acc: 93.08%, F1: 92.43%
+[2026-10-11 08:55:46] [INFO] resnet18_color_aug:  -> Checkpoint saved (New Best Val Macro-F1: 92.43%)
+[2026-10-11 08:59:57] [INFO] resnet18_color_aug: Stage 2 [Epoch 12/15] (250.7s) - Train Loss: 0.8422, Acc: 89.15%, F1: 88.34% | Val Loss: 0.7248, Acc: 93.26%, F1: 92.57%
+[2026-10-11 08:59:57] [INFO] resnet18_color_aug:  -> Checkpoint saved (New Best Val Macro-F1: 92.57%)
+[2026-10-11 09:04:36] [INFO] resnet18_color_aug: Stage 2 [Epoch 13/15] (279.3s) - Train Loss: 0.8194, Acc: 89.77%, F1: 89.01% | Val Loss: 0.7230, Acc: 93.43%, F1: 92.67%
+[2026-10-11 09:04:36] [INFO] resnet18_color_aug:  -> Checkpoint saved (New Best Val Macro-F1: 92.67%)
+[2026-10-11 09:08:53] [INFO] resnet18_color_aug: Stage 2 [Epoch 14/15] (256.6s) - Train Loss: 0.7997, Acc: 90.87%, F1: 90.16% | Val Loss: 0.7094, Acc: 93.43%, F1: 92.80%
+[2026-10-11 09:08:53] [INFO] resnet18_color_aug:  -> Checkpoint saved (New Best Val Macro-F1: 92.80%)
+[2026-10-11 09:12:58] [INFO] resnet18_color_aug: Stage 2 [Epoch 15/15] (245.2s) - Train Loss: 0.7916, Acc: 91.20%, F1: 90.51% | Val Loss: 0.7081, Acc: 93.61%, F1: 92.82%
+[2026-10-11 09:12:58] [INFO] resnet18_color_aug:  -> Checkpoint saved (New Best Val Macro-F1: 92.82%)
+[2026-10-11 09:12:58] [INFO] resnet18_color_aug: ============================================================
+[2026-10-11 09:12:58] [INFO] resnet18_color_aug: Training completed in 54.59 minutes.
+[2026-10-11 09:12:58] [INFO] resnet18_color_aug: Best Validation Macro-F1: 92.82% achieved at epoch 15.
+[2026-10-11 09:12:58] [INFO] resnet18_color_aug: Best model saved to: outputs\checkpoints\resnet18_color_aug_best.pth
+[2026-10-11 09:12:58] [INFO] resnet18_color_aug: ============================================================
+[2026-10-11 09:13:00] [INFO] resnet18_color_aug: Saved learning curves to outputs\figures\resnet18_color_aug_learning_curves.png

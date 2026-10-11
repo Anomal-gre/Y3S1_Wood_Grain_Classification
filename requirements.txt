@@ -1,0 +1,13 @@
+torch==2.14.1+cpu
+torchvision==0.29.1+cpu
+scikit-learn>=1.4.0
+scikit-image>=0.23.0
+numpy>=1.26.0
+pandas>=2.2.0
+matplotlib>=3.8.0
+seaborn>=0.13.0
+Pillow>=10.2.0
+PyYAML>=6.0.1
+tqdm>=4.66.0
+opencv-python>=4.9.0
+streamlit>=1.35.0

@@ -1,0 +1,310 @@
+{
+  "experiment": "resnet18_color_aug",
+  "checkpoint": "outputs\\checkpoints\\resnet18_color_aug_best.pth",
+  "test_samples": 2836,
+  "accuracy": 0.9274,
+  "macro_f1": 0.9257,
+  "weighted_f1": 0.9275,
+  "latency_ms": 14.73,
+  "classification_report": {
+    "Beech (Fagus sylvatica)": {
+      "precision": 0.9483870967741935,
+      "recall": 0.9423076923076923,
+      "f1-score": 0.9453376205787781,
+      "support": 468.0
+    },
+    "Black Locust (Robinia pseudoacacia)": {
+      "precision": 0.956989247311828,
+      "recall": 0.9270833333333334,
+      "f1-score": 0.9417989417989417,
+      "support": 96.0
+    },
+    "Wild Cherry (Prunus avium)": {
+      "precision": 0.9197651663405088,
+      "recall": 0.9251968503937008,
+      "f1-score": 0.9224730127576055,
+      "support": 508.0
+    },
+    "Sweet Chestnut (Castanea sativa)": {
+      "precision": 0.9552238805970149,
+      "recall": 0.96,
+      "f1-score": 0.9576059850374065,
+      "support": 200.0
+    },
+    "Douglas Fir (Pseudotsuga menziesii)": {
+      "precision": 0.908695652173913,
+      "recall": 0.9008620689655172,
+      "f1-score": 0.9047619047619048,
+      "support": 232.0
+    },
+    "European Larch (Larix decidua)": {
+      "precision": 0.9844559585492227,
+      "recall": 0.8796296296296297,
+      "f1-score": 0.9290953545232273,
+      "support": 216.0
+    },
+    "English Oak (Quercus robur)": {
+      "precision": 0.9850746268656716,
+      "recall": 0.868421052631579,
+      "f1-score": 0.9230769230769231,
+      "support": 152.0
+    },
+    "Scots Pine (Pinus sylvestris)": {
+      "precision": 0.8796296296296297,
+      "recall": 0.8796296296296297,
+      "f1-score": 0.8796296296296297,
+      "support": 108.0
+    },
+    "Oriental Plane (Platanus orientalis)": {
+      "precision": 0.9369369369369369,
+      "recall": 0.9629629629629629,
+      "f1-score": 0.9497716894977168,
+      "support": 108.0
+    },
+    "Aspen (Populus tremula)": {
+      "precision": 0.8828828828828829,
+      "recall": 0.8909090909090909,
+      "f1-score": 0.8868778280542986,
+      "support": 220.0
+    },
+    "Tree of Heaven (Ailanthus altissima)": {
+      "precision": 0.950354609929078,
+      "recall": 0.9710144927536232,
+      "f1-score": 0.9605734767025089,
+      "support": 276.0
+    },
+    "Walnut (Juglans regia)": {
+      "precision": 0.8531468531468531,
+      "recall": 0.9682539682539683,
+      "f1-score": 0.9070631970260223,
+      "support": 252.0
+    },
+    "accuracy": 0.9273624823695346,
+    "macro avg": {
+      "precision": 0.9301285450948112,
+      "recall": 0.9230225643142272,
+      "f1-score": 0.9256721302870804,
+      "support": 2836.0
+    },
+    "weighted avg": {
+      "precision": 0.9290927835134195,
+      "recall": 0.9273624823695346,
+      "f1-score": 0.9274513092311466,
+      "support": 2836.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      441,
+      1,
+      0,
+      1,
+      12,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      12
+    ],
+    [
+      2,
+      89,
+      3,
+      0,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      3,
+      470,
+      7,
+      1,
+      0,
+      1,
+      1,
+      2,
+      15,
+      2,
+      5
+    ],
+    [
+      0,
+      0,
+      6,
+      192,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      0,
+      0
+    ],
+    [
+      8,
+      0,
+      1,
+      0,
+      209,
+      0,
+      0,
+      0,
+      0,
+      4,
+      2,
+      8
+    ],
+    [
+      5,
+      0,
+      4,
+      1,
+      2,
+      190,
+      1,
+      3,
+      0,
+      2,
+      3,
+      5
+    ],
+    [
+      3,
+      0,
+      1,
+      0,
+      1,
+      1,
+      132,
+      1,
+      4,
+      0,
+      2,
+      7
+    ],
+    [
+      0,
+      0,
+      5,
+      0,
+      1,
+      0,
+      0,
+      95,
+      0,
+      3,
+      4,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      0,
+      2,
+      0,
+      0,
+      0,
+      104,
+      0,
+      0,
+      1
+    ],
+    [
+      0,
+      0,
+      17,
+      0,
+      0,
+      0,
+      0,
+      3,
+      0,
+      196,
+      0,
+      4
+    ],
+    [
+      0,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0,
+      5,
+      1,
+      0,
+      268,
+      0
+    ],
+    [
+      5,
+      0,
+      2,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      244
+    ]
+  ],
+  "robustness_test": {
+    "original": {
+      "accuracy": 0.9274,
+      "macro_f1": 0.9257,
+      "acc_drop": 0.0,
+      "f1_drop": 0.0
+    },
+    "grayscale": {
+      "accuracy": 0.8392,
+      "macro_f1": 0.8206,
+      "acc_drop": 8.82,
+      "f1_drop": 10.51
+    },
+    "desaturate": {
+      "accuracy": 0.8981,
+      "macro_f1": 0.8882,
+      "acc_drop": 2.93,
+      "f1_drop": 3.74
+    },
+    "hue_+0.2": {
+      "accuracy": 0.7958,
+      "macro_f1": 0.789,
+      "acc_drop": 13.15,
+      "f1_drop": 13.67
+    },
+    "hue_-0.2": {
+      "accuracy": 0.8452,
+      "macro_f1": 0.8296,
+      "acc_drop": 8.22,
+      "f1_drop": 9.6
+    },
+    "dark": {
+      "accuracy": 0.9129,
+      "macro_f1": 0.9074,
+      "acc_drop": 1.45,
+      "f1_drop": 1.83
+    },
+    "bright": {
+      "accuracy": 0.9118,
+      "macro_f1": 0.9104,
+      "acc_drop": 1.55,
+      "f1_drop": 1.53
+    }
+  }
+}
