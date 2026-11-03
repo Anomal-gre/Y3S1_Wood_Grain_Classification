@@ -51,3 +51,6 @@ outputs/runs/
 *.swo
 .DS_Store
 Thumbs.db
+
+# Browser inference model used by the static Space
+!hf_space_static/assets/wood_resnet18.onnx

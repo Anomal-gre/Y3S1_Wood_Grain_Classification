@@ -9,7 +9,8 @@
 \usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{booktabs}
-\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage[hidelinks]{hyperref}
 \usepackage{subcaption}
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
@@ -41,18 +42,20 @@ Nhận diện loài gỗ, Fine-grained Texture, Transfer Learning, ResNet18, Col
 \section*{Bảng Phân Công Nhiệm Vụ Thành Viên}
 \begin{table}[htbp]
 \caption{Bảng phân công công việc nhóm trong đồ án INT3401}
-\begin{center}
-\begin{tabular}{p{2.6cm}p{4.2cm}c}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\linewidth}{@{}p{0.25\linewidth}Xc@{}}
 \toprule
-\textbf{Thành viên (MSSV)} & \textbf{Nội dung phụ trách chính} & \textbf{Đóng góp} \\
+\textbf{Thành viên (MSSV)} & \textbf{Nội dung phụ trách chính} & \shortstack{\textbf{Đóng}\\\textbf{góp}} \\
 \midrule
 Trần Gia Bảo (NT)\newline 24022949 & Điều phối dự án, xây dựng kiến trúc \texttt{WoodNet}, pipeline huấn luyện 2 giai đoạn, viết báo cáo LaTeX & 100\% \\
 Khai Quang\newline 24023009 & Triển khai mô hình Baseline LBP/GLCM + SVM, thực nghiệm Ablation Study \& Robustness Test & 100\% \\
 Vũ Tuấn Vương\newline 24023097 & Tiền xử lý dữ liệu (\texttt{splits.json}), phát triển và triển khai ứng dụng Web Demo (Hugging Face Spaces) & 100\% \\
 Nguyễn Đình Hùng\newline 24023001 & Đánh giá kiểm thử đa mô hình (Confusion Matrix, Macro-F1), trực quan hóa giải thích Grad-CAM & 100\% \\
 \bottomrule
-\end{tabular}
-\end{center}
+\end{tabularx}
 \end{table}
 
 \section{Giới Thiệu}
@@ -138,18 +141,20 @@ Toàn bộ mã nguồn được triển khai trên môi trường PyTorch 2.14, 
 \begin{table}[htbp]
 \caption{Kết quả thực nghiệm trên tập Test benchmark 2.836 ảnh}
 \label{tab:results}
-\begin{center}
-\begin{tabular}{llccc}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\linewidth}{@{}lXrrr@{}}
 \toprule
-\textbf{Mô hình} & \textbf{Chiến lược} & \textbf{Accuracy} & \textbf{Macro-F1} & \textbf{Độ trễ CPU} \\
+\textbf{Mô hình} & \textbf{Chiến lược} & \textbf{Accuracy} & \textbf{Macro-F1} & \shortstack{\textbf{Độ trễ}\\\textbf{CPU}} \\
 \midrule
 LBP + GLCM & SVM (RBF) & 80.99\% & 78.92\% & \textbf{0.36 ms/ảnh} \\
 ResNet18 & Two-Stage + Color Aug & \textbf{92.74\%} & \textbf{92.57\%} & 14.73 ms/ảnh \\
 ResNet50 & Two-Stage + Color Aug & 93.41\% & 93.15\% & 32.40 ms/ảnh \\
 ConvNeXt-T & Two-Stage + Color Aug & 93.85\% & 93.52\% & 38.10 ms/ảnh \\
 \bottomrule
-\end{tabular}
-\end{center}
+\end{tabularx}
 \end{table}
 
 Kết quả tại Bảng \ref{tab:results} khẳng định mô hình Deep Transfer Learning cải thiện vượt bậc ($+13.65\%$ Macro-F1) so với baseline LBP-SVM cổ điển. Trong đó, ResNet18 đạt sự cân bằng tối ưu giữa độ chính xác rất cao ($92.74\%$) và độ trễ CPU chỉ 14.73 ms/ảnh, hoàn toàn đáp ứng yêu cầu xử lý thời gian thực trên các hệ thống kiểm định lâm sản.
@@ -168,10 +173,13 @@ Khi huấn luyện ResNet18 \textit{không} có Color Augmentation, Macro-F1 tr�
 \begin{table}[htbp]
 \caption{Hiệu năng Macro-F1 (\%) trên 7 phép biến đổi màu sắc (E7)}
 \label{tab:robustness}
-\begin{center}
-\begin{tabular}{lccc}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\linewidth}{@{}Xccc@{}}
 \toprule
-\textbf{Phép biến đổi} & \textbf{Không Color Aug} & \textbf{Có Color Aug (Đề xuất)} & \textbf{Mức sụt giảm} \\
+\textbf{Phép biến đổi} & \shortstack{\textbf{Không}\\\textbf{Color Aug}} & \shortstack{\textbf{Có Color Aug}\\\textbf{(Đề xuất)}} & \shortstack{\textbf{Mức sụt}\\\textbf{giảm}} \\
 \midrule
 Ảnh gốc (Original) & 92.80\% & \textbf{92.57\%} & -0.00\% \\
 Ảnh xám (Grayscale) & 71.30\% & \textbf{82.06\%} & -10.51\% \\
@@ -181,8 +189,7 @@ Lệch màu Hue -0.2 & 68.40\% & \textbf{82.96\%} & -9.60\% \\
 Ảnh tối (Brightness 0.6) & 82.50\% & \textbf{90.74\%} & -1.83\% \\
 Ảnh sáng (Brightness 1.4) & 83.10\% & \textbf{91.04\%} & -1.53\% \\
 \bottomrule
-\end{tabular}
-\end{center}
+\end{tabularx}
 \end{table}
 
 \begin{figure}[htbp]

@@ -21,3 +21,7 @@ Showcase tương tác kết quả **Bài tập lớn môn Học Máy (INT3401) -
   - **Macro-F1:** 92.57%
   - **Độ trễ suy luận (CPU):** 14.73 ms / ảnh
 - **Tập dữ liệu:** Zenodo DOI 10.5281/zenodo.2545611 (8,544 ảnh RGB thớ gỗ, 12 loài gỗ châu Âu)
+
+## Chạy giao diện tĩnh
+
+Phục vụ thư mục này bằng máy chủ HTTP. Tab nhận diện chạy ResNet-18 ONNX trong trình duyệt, cần `assets/wood_resnet18.onnx` và kết nối để tải ONNX Runtime Web từ jsDelivr. Mô hình ONNX nhận ảnh 224 × 224; kết quả thử nghiệm 92,74% trong báo cáo được đo với cấu hình ResNet18 200 × 200 nên không nên coi là số đo của giao diện này. Lần tải đầu cần tải mô hình khoảng 45 MB.
