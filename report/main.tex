@@ -95,7 +95,7 @@ Grad-CAM dùng gradient của điểm số lớp đích đối với các bản 
 
 \section{Dữ liệu và phương pháp}
 \subsection{Bộ dữ liệu và cách chia tập}
-Nhóm sử dụng bản dữ liệu công khai trên Zenodo gồm 8.544 ảnh RGB, kích thước gốc $200\times200$ điểm ảnh, thuộc 12 loài~\cite{barmpoutis2019dataset}. Tên khoa học được giữ làm căn cứ định danh; riêng \textit{Robinia pseudoacacia} được ghi là Black locust để tránh nhầm với keo dậu (\textit{Leucaena leucocephala})~\cite{kewrobinia,vafskeodau}.
+Nhóm sử dụng bản dữ liệu công khai trên Zenodo gồm 8.544 ảnh RGB, kích thước gốc $200\times200$ điểm ảnh, thuộc 12 loài~\cite{barmpoutis2019dataset}. Đây là bản dữ liệu được dùng trong thực nghiệm của nhóm; bài báo năm 2018 mô tả WOOD-AUTH với hơn 4.200 ảnh~\cite{barmpoutis2018wood}. Tên khoa học được giữ làm căn cứ định danh; riêng \textit{Robinia pseudoacacia} được ghi là Black locust để tránh nhầm với keo dậu (\textit{Leucaena leucocephala})~\cite{kewrobinia,vafskeodau}.
 
 \begin{table}[!t]
 \caption{Các loài gỗ và số ảnh trong tập kiểm thử}
@@ -318,6 +318,8 @@ Sau chỉnh sửa, 9 kiểm thử chạy thành công; suy luận lại 2.836 �
 \nopagebreak[4]
 Báo cáo đã xây dựng và đánh giá quy trình phân loại 12 loài gỗ trên WOOD-AUTH bằng baseline LBP--GLCM--SVM và ResNet18 học chuyển giao hai giai đoạn. ResNet18 đạt Accuracy 92,74\% và Macro-F1 92,57\%, cải thiện 13,65 điểm phần trăm Macro-F1 so với baseline trên cùng tập Test. Phân tích theo loài cho thấy cải thiện ở cả 12 lớp, trong khi kiểm tra màu cho thấy mô hình vẫn nhạy với thang xám và lệch sắc độ. Kết quả hỗ trợ lựa chọn ResNet18 làm mô hình demo hiện tại, nhưng chưa xác nhận ưu thế so với các mạng sâu hơn hoặc độ tin cậy trong giám định ngoài thực tế. Hoàn thành đối chứng và kiểm chứng triển khai là những công việc cần tiếp tục.
 
+% Balance the two columns on the final page of this bibliography.
+\IEEEtriggeratref{10}
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
 \end{document}

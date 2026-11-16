@@ -4,6 +4,8 @@ Bài tập lớn **Học máy — INT3401, lớp 11, Nhóm 18**, Trường Đạ
 
 Phân loại ảnh cận cảnh bề mặt gỗ thành **12 loài** trên WOOD-AUTH. Phương pháp cơ sở là **LBP + GLCM + SVM**; mô hình chính là **ResNet18 học chuyển giao hai giai đoạn**.
 
+**Đầu vào:** một ảnh RGB chụp cận cảnh bề mặt gỗ. **Đầu ra:** nhãn loài dự đoán và Top-3 điểm dự đoán; demo có thêm Grad-CAM tùy chọn. Điểm softmax chưa được hiệu chỉnh xác suất. Phạm vi hiện tại là 12 loài đã biết, chưa có cơ chế nhận diện loài ngoài bộ nhãn.
+
 [Báo cáo PDF](report/main.pdf) · [Nguồn LaTeX](report/main.tex) · [Demo HF tùy chọn](https://huggingface.co/spaces/AnomalGreatad/wood-grain-classification) · [Dataset Zenodo](https://zenodo.org/records/2545611)
 
 ## Thành viên
@@ -50,6 +52,8 @@ Requirements dùng wheel CPU Windows/Linux từ kho chính thức PyTorch. Nếu
 
 ## Chuẩn bị dữ liệu
 
+Sử dụng bản **Wood Species Dataset** do Panagiotis Barmpoutis công bố trên [Zenodo năm 2019](https://doi.org/10.5281/zenodo.2545611), gồm **8.544 ảnh**. Bài báo liên quan năm 2018 mô tả WOOD-AUTH với hơn 4.200 ảnh; cần phân biệt phiên bản dữ liệu khi đối chiếu kết quả. Theo hướng dẫn trên Zenodo, khi sử dụng dữ liệu cần trích cả dataset và [bài báo gốc](https://doi.org/10.1016/j.compag.2017.12.011).
+
 Dataset và trọng số không nằm trong GitHub hoặc ZIP nộp bài:
 
 ~~~bash
@@ -71,16 +75,17 @@ python src/evaluate.py --config configs/resnet18.yaml --device cpu
 python src/gradcam.py --config configs/resnet18.yaml
 ~~~
 
-Lần huấn luyện đầu cần mạng để tải trọng số ImageNet. Mô hình được lưu tại `outputs/checkpoints/baseline_lbp_glcm_svm.joblib` và `outputs/checkpoints/resnet18_color_aug_best.pth`.
+Lần huấn luyện đầu cần mạng để tải trọng số ImageNet. Mô hình được lưu tại `outputs/checkpoints/baseline_lbp_glcm_svm.joblib` và `outputs/checkpoints/resnet18_color_aug_best.pth`. Các lệnh huấn luyện/đánh giá có thể ghi đè checkpoint và kết quả cùng tên; lưu bản sao nếu cần giữ kết quả của lần chạy trước.
 
 | Thiết lập ResNet18 | Giá trị |
 |---|---|
 | Đầu vào / batch | 200 × 200 / 64 |
 | Huấn luyện head | 5 epoch, learning rate 0,001 |
-| Tinh chỉnh toàn mạng | 10 epoch; backbone 0,0001, head 0,001 |
+| Tinh chỉnh toàn mạng | Tối đa 10 epoch; backbone 0,0001, head 0,001 |
 | Tối ưu | AdamW, weight decay 0,01; CosineAnnealingLR ở giai đoạn 2 |
 | Regularization | Dropout 0,4 / 0,3; label smoothing 0,1 |
 | Chọn checkpoint | Macro-F1 Validation cao nhất |
+| Dừng sớm ở giai đoạn 2 | Sau 4 epoch liên tiếp không cải thiện Macro-F1 Validation |
 
 Đổi cấu hình tại `configs/resnet18.yaml`. Chưa có tìm kiếm siêu tham số chứng minh cấu hình là tối ưu.
 
@@ -156,9 +161,12 @@ Các thư mục `dataset/`, `outputs/checkpoints/`, `outputs/figures/`, `.venv/`
 
 ## Tài liệu chính
 
-- Barmpoutis và cộng sự, *Wood species recognition through multidimensional texture analysis*, Computers and Electronics in Agriculture, 2018.
-- Barmpoutis, *Wood Species Dataset*, Zenodo, 2019. DOI: [10.5281/zenodo.2545611](https://doi.org/10.5281/zenodo.2545611).
-- He và cộng sự, *Deep Residual Learning for Image Recognition*, CVPR 2016.
-- Selvaraju và cộng sự, *Grad-CAM*, ICCV 2017.
+- P. Barmpoutis và cộng sự, [*Wood species recognition through multidimensional texture analysis*](https://doi.org/10.1016/j.compag.2017.12.011), *Computers and Electronics in Agriculture*, tập 144, tr. 241–248, 2018.
+- P. Barmpoutis, [*Wood Species Dataset*](https://doi.org/10.5281/zenodo.2545611), Zenodo, 2019.
+- T. Ojala, M. Pietikäinen và T. Mäenpää, [*Multiresolution gray-scale and rotation invariant texture classification with local binary patterns*](https://doi.org/10.1109/TPAMI.2002.1017623), *IEEE TPAMI*, tập 24, số 7, tr. 971–987, 2002.
+- R. M. Haralick, K. Shanmugam và I. Dinstein, [*Textural features for image classification*](https://doi.org/10.1109/TSMC.1973.4309314), *IEEE Transactions on Systems, Man, and Cybernetics*, tập SMC-3, số 6, tr. 610–621, 1973.
+- K. He và cộng sự, [*Deep Residual Learning for Image Recognition*](https://doi.org/10.1109/CVPR.2016.90), CVPR, tr. 770–778, 2016.
+- R. R. Selvaraju và cộng sự, [*Grad-CAM: Visual Explanations from Deep Networks via Gradient-Based Localization*](https://doi.org/10.1109/ICCV.2017.74), ICCV, tr. 618–626, 2017.
+- I. Loshchilov và F. Hutter, [*Decoupled Weight Decay Regularization*](https://openreview.net/forum?id=Bkg6RiCqY7), ICLR, 2019.
 
-Trích dẫn đầy đủ theo IEEE nằm trong báo cáo.
+Danh mục đầy đủ **11 nguồn được trích dẫn theo IEEE** nằm trong [báo cáo PDF](report/main.pdf); dữ liệu thư mục nằm ở [refs.bib](report/refs.bib). Hai nguồn về định danh thực vật hỗ trợ tên loài; các chỉ số của mô hình nhóm lấy từ thực nghiệm trong `outputs/metrics/`.
