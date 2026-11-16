@@ -107,6 +107,14 @@ Demo local có tab tải ảnh nhận diện và tab thông tin dự án, Top-3 
 
 **Hugging Face không bắt buộc** để tải dữ liệu, huấn luyện, đánh giá hoặc chạy local. Nó phục vụ minh họa trực tuyến; mã triển khai riêng ở [repository của Space](https://huggingface.co/spaces/AnomalGreatad/wood-grain-classification/tree/main). GitHub này không sao chép thêm bộ `src/`, thư viện cài sẵn hay ONNX của Space. Không coi điểm benchmark là kết quả đã đo của bản web dùng tiền xử lý khác. Cần kiểm tra trạng thái và nhận diện đầu cuối trên dịch vụ tại thời điểm trình bày.
 
+## Sử dụng công cụ AI
+
+Nhóm sử dụng **ChatGPT/Codex** để hỗ trợ rà soát và chỉnh sửa mã nguồn, tiền xử lý và Grad-CAM, tổ chức dự án, xây dựng kiểm thử, biên tập README và báo cáo LaTeX, đồng thời đối chiếu các nhận định với kết quả đã lưu.
+
+Sau chỉnh sửa, 9 kiểm thử tự động đã chạy thành công; suy luận lại trên 2.836 ảnh Test cho ma trận nhầm lẫn khớp kết quả đã lưu (2.630 ảnh đúng). Đây là kiểm tra suy luận từ checkpoint hiện có, không phải một lần huấn luyện lại. Các thành viên chịu trách nhiệm rà soát, hiểu, giải thích và xác nhận bản cuối trước khi nộp.
+
+Xem [bản ghi sử dụng AI và minh chứng](docs/AI_USAGE.md). Bản ghi này không thay đổi bảng phân công thành viên và không tự xác nhận việc nghiệm thu của nhóm.
+
 ## Kiểm tra và biên dịch báo cáo
 
 ~~~bash
@@ -139,6 +147,7 @@ configs/               Cấu hình và bản kê chia tập
 src/                   Dữ liệu, mô hình, huấn luyện, đánh giá, suy luận, Grad-CAM
 scripts/               Tải dữ liệu, chia tập, chạy pipeline, đóng gói
 tests/                 Kiểm tra suy luận, Grad-CAM và gói nộp
+docs/                  Ghi nhận sử dụng AI và minh chứng
 outputs/metrics/       Kết quả thực nghiệm đã lưu
 report/                PDF, LaTeX, BibTeX và hình của báo cáo
 ~~~
