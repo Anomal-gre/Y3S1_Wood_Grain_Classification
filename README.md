@@ -1,3 +1,5 @@
+![WoodGrain-AI - Nhận diện loài gỗ từ ảnh vân gỗ, INT3401, Nhóm 18](docs/assets/readme-cover.png)
+
 # Phân loại loài gỗ từ ảnh vân gỗ
 
 Bài tập lớn **Học máy — INT3401, lớp 11, Nhóm 18**, Trường Đại học Công nghệ, ĐHQGHN.

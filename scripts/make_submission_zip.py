@@ -15,6 +15,10 @@ def submission_files(root):
         if not (root / name).is_file():
             raise FileNotFoundError(f"Missing required submission file: {name}")
     files = {root / name for name in required}
+    # Include the cover referenced by README in the offline submission.
+    readme_cover = root / "docs/assets/readme-cover.png"
+    if readme_cover.is_file():
+        files.add(readme_cover)
     for directory in SOURCE_DIRS:
         for path in (root / directory).rglob("*"):
             if path.is_file() and "__pycache__" not in path.parts and path.suffix in SOURCE_SUFFIXES:
