@@ -4,229 +4,315 @@
 \usepackage[vietnamese]{babel}
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
-\usepackage{algorithmic}
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
-\usepackage{booktabs}
-\usepackage{tabularx}
+\usepackage{booktabs,tabularx,array}
 \usepackage[hidelinks]{hyperref}
-\usepackage{subcaption}
-
-\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
-    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\renewcommand{\IEEEkeywordsname}{Từ khóa}
+\addto\captionsvietnamese{\renewcommand{\refname}{Tài liệu tham khảo}\renewcommand{\abstractname}{Tóm tắt}}
+\raggedbottom
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\tableformat}{\footnotesize\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.15}}
+\setlength{\emergencystretch}{1.5em}
+\graphicspath{{figures/}}
+\interdisplaylinepenalty=2500
 
 \begin{document}
-
-\title{Nhận Diện Loài Gỗ Từ Ảnh Vân Gỗ Cận Cảnh Sử Dụng Học Chuyển Giao Hai Giai Đoạn}
-
+\title{Phân loại loài gỗ dựa trên vân gỗ\\{\large INT3401 -- Lớp 11 -- Nhóm 18}}
 \author{
-\IEEEauthorblockN{Trần Gia Bảo (NT - 24022949), Khai Quang (24023009), \\ Vũ Tuấn Vương (24023097), Nguyễn Đình Hùng (24023001)}
-\IEEEauthorblockA{\textit{Khoa Công nghệ Thông tin, Trường Đại học Công nghệ, ĐHQGHN} \\
-Môn học: Học Máy (INT3401) -- Nhóm 11 (Lớp học phần: INT3401 11) \\
-Hà Nội, Việt Nam}
+\IEEEauthorblockN{Trần Gia Bảo}
+\IEEEauthorblockA{Mã sinh viên: 24022949}
+\and
+\IEEEauthorblockN{Nguyễn Đình Hùng}
+\IEEEauthorblockA{Mã sinh viên: 24023001}
+\and
+\IEEEauthorblockN{Trần Quang Khải}
+\IEEEauthorblockA{Mã sinh viên: 24023009}
+\and
+\IEEEauthorblockN{Vũ Tuấn Vương}
+\IEEEauthorblockA{Mã sinh viên: 24023097}
 }
-
 \maketitle
 
 \begin{abstract}
-Nhận diện loài gỗ từ ảnh cấu trúc vân cận cảnh (macroscopic grain images) là bài toán phân loại kết cấu tinh vi (fine-grained texture classification) có ý nghĩa thiết thực trong kiểm soát lâm sản, chống gian lận thương mại và thẩm định đồ gỗ nội thất. Các phương pháp truyền thống dựa trên đặc trưng thủ công như Local Binary Patterns (LBP) hoặc GLCM thường dễ bị ảnh hưởng bởi góc xẻ gỗ và biến thiên quang học. Nghiên cứu này đề xuất phương pháp phân loại 12 loài gỗ dựa trên mô hình học chuyển giao sâu hai giai đoạn (Two-Stage Transfer Learning) với xương sống ResNet18 kết hợp kỹ thuật tăng cường dữ liệu màu sắc (Color Augmentation). Thực nghiệm được tiến hành trên tập dữ liệu chuẩn WOOD-AUTH gồm 8.544 ảnh macro (5.708 ảnh huấn luyện, 2.836 ảnh kiểm thử độc lập). Kết quả cho thấy mô hình đạt Macro-F1 vượt trội so với baseline LBP-SVM, duy trì độ trễ suy luận thời gian thực trên CPU. Thử nghiệm độ bền vững (Robustness Test) với 7 dạng biến đổi màu sắc (đen trắng, suy giảm bão hòa, lệch tông màu, tối/sáng) khẳng định mô hình tập trung học cấu trúc thớ gỗ thay vì bị đánh lừa bởi màu sắc bề mặt. Bản đồ kích hoạt Grad-CAM cung cấp cơ sở trực quan giải thích quyết định của mạng nơ-ron.\\
-\textbf{Mã nguồn dự án:} \url{https://github.com/INT3401-Group11/Wood-Grain-Classification}\\
-\textbf{Web Demo trực tuyến:} \url{https://huggingface.co/spaces/AnomalGreatad/wood-grain-classification}
+Nhận diện loài gỗ từ ảnh vân cận cảnh là bài toán phân loại kết cấu tinh vi, có tiềm năng hỗ trợ tra cứu và sàng lọc nguyên liệu gỗ. Báo cáo trình bày quy trình học chuyển giao hai giai đoạn với ResNet18 và đối chiếu với mô hình cơ sở LBP--GLCM--SVM. Thực nghiệm sử dụng bộ WOOD-AUTH gồm 8.544 ảnh thuộc 12 loài, chia thành 4.566 ảnh huấn luyện, 1.142 ảnh thẩm định và 2.836 ảnh kiểm thử. ResNet18 đạt Accuracy 92,74\% và Macro-F1 92,57\%, cao hơn mô hình cơ sở 13,65 điểm phần trăm về Macro-F1. Đánh giá trên bảy điều kiện gồm ảnh gốc và sáu biến đổi màu tổng hợp cho thấy mô hình tương đối ổn định trước thay đổi độ sáng nhưng còn nhạy với thang xám và lệch sắc độ. Grad-CAM được dùng để minh họa vùng ảnh ảnh hưởng đến dự đoán ở mức thô. Kết quả hiện chưa đủ để kết luận về hiệu quả riêng của tăng cường màu, ưu thế so với các mạng sâu hơn, hoặc khả năng nhận diện gỗ nhuộm và phủ vecni trong thực tế.
+\par\noindent\textbf{Mã nguồn:} \url{https://github.com/Anomal-gre/Y3S1_Wood_Grain_Classification}.
 \end{abstract}
-
 \begin{IEEEkeywords}
-Nhận diện loài gỗ, Fine-grained Texture, Transfer Learning, ResNet18, Color Augmentation, Grad-CAM, WOOD-AUTH.
+Phân loại loài gỗ, kết cấu ảnh, học chuyển giao, ResNet18, tăng cường màu, Grad-CAM, WOOD-AUTH.
 \end{IEEEkeywords}
 
-\section*{Bảng Phân Công Nhiệm Vụ Thành Viên}
-\begin{table}[htbp]
-\caption{Bảng phân công công việc nhóm trong đồ án INT3401}
-\centering
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\linewidth}{@{}p{0.25\linewidth}Xc@{}}
+\begin{table}[!ht]
+\caption{Phân công công việc của các thành viên}
+\label{tab:contributions}
+\centering\tableformat
+\begin{tabularx}{\linewidth}{@{}lclY@{}}
 \toprule
-\textbf{Thành viên (MSSV)} & \textbf{Nội dung phụ trách chính} & \shortstack{\textbf{Đóng}\\\textbf{góp}} \\
+\textbf{Thành viên} & \textbf{MSSV} & \textbf{Tỷ lệ} & \textbf{Công việc} \\
 \midrule
-Trần Gia Bảo (NT)\newline 24022949 & Điều phối dự án, xây dựng kiến trúc \texttt{WoodNet}, pipeline huấn luyện 2 giai đoạn, viết báo cáo LaTeX & 100\% \\
-Khai Quang\newline 24023009 & Triển khai mô hình Baseline LBP/GLCM + SVM, thực nghiệm Ablation Study \& Robustness Test & 100\% \\
-Vũ Tuấn Vương\newline 24023097 & Tiền xử lý dữ liệu (\texttt{splits.json}), phát triển và triển khai ứng dụng Web Demo (Hugging Face Spaces) & 100\% \\
-Nguyễn Đình Hùng\newline 24023001 & Đánh giá kiểm thử đa mô hình (Confusion Matrix, Macro-F1), trực quan hóa giải thích Grad-CAM & 100\% \\
+Trần Gia Bảo & 24022949 & 25\% & Lập trình huấn luyện, xây dựng website \\
+Nguyễn Đình Hùng & 24023001 & 25\% & Soạn báo cáo bằng LaTeX \\
+Trần Quang Khải & 24023009 & 25\% & Phân tích dự án \\
+Vũ Tuấn Vương & 24023097 & 25\% & Soạn báo cáo bằng LaTeX \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\section{Giới Thiệu}
-Gỗ là vật liệu tự nhiên có cấu trúc dị hướng phức tạp. Việc giám định loài gỗ trong thực tế đóng vai trò then chốt đối với cơ quan quản lý lâm sản nhằm ngăn chặn khai thác gỗ lậu và bảo vệ các loài thực vật nguy cấp. Trong ngành sản xuất nội thất và mỹ nghệ, sự khác biệt giá trị giữa các loài gỗ quý (như Óc chó, Sồi) và gỗ thông thường đòi hỏi quy trình phân loại chính xác, tránh việc gỗ rẻ tiền được sơn phủ màu vecni giả mạo gỗ đắt tiền.
+\section{Giới thiệu}
+\subsection{Bối cảnh và phát biểu bài toán}
+Xác định đúng loài gỗ có ý nghĩa đối với phân loại nguyên liệu, kinh doanh nội thất và quản lý lâm sản. Quan sát bằng mắt thường phụ thuộc vào kinh nghiệm, trong khi nhiều loài có màu sắc và đường vân gần giống nhau. Công cụ nhận diện từ ảnh có thể cung cấp kết quả tham khảo ban đầu; khả năng dùng cho giám định thực tế cần được kiểm chứng trong điều kiện sử dụng cụ thể.
 
-\subsection{Phát biểu bài toán}
-Bài toán nhận diện loài gỗ từ ảnh cận cảnh được định nghĩa chính thức như sau:
-\begin{itemize}
-    \item \textbf{Đầu vào:} Ảnh màu RGB $\mathbf{x} \in \mathbb{R}^{H \times W \times 3}$ chụp cận cảnh bề mặt thớ vân gỗ (kích thước chuẩn hóa $224 \times 224$).
-    \item \textbf{Đầu ra:} Nhãn loài gỗ $\hat{y} \in \{1, 2, \dots, K\}$ cùng phân bố xác suất dự đoán $P(y = c \mid \mathbf{x})$, kèm bản đồ nhiệt Grad-CAM giải thích vùng kích hoạt cấu trúc vân.
-\end{itemize}
+Trong đề tài, đầu vào là một ảnh màu RGB chụp cận cảnh bề mặt gỗ, đầu ra chính là một nhãn trong 12 loài của bộ WOOD-AUTH~\cite{barmpoutis2018wood,barmpoutis2019dataset}. Với mạng học sâu, 12 điểm số đầu ra được chuyển qua softmax để tạo phân phối điểm dự đoán. Các điểm này chưa được hiệu chỉnh xác suất và không đồng nghĩa với độ chính xác của từng dự đoán. Grad-CAM cung cấp hình minh họa bổ trợ, không phải đầu ra bắt buộc của bài toán phân loại.
 
-\subsection{Các thách thức đặc thù}
-Khác với bài toán phân loại đối tượng tổng quát, phân loại vân gỗ đối mặt với 3 thách thức lớn:
-\begin{enumerate}
-    \item \textbf{Khác biệt liên lớp tinh vi (Fine-grained):} Nhiều loài gỗ có cấu trúc tế bào mạch gỗ và vòng năm tương đồng (ví dụ giữa các loài trong cùng họ Thông hoặc họ Dẻ), độ tương phản giữa các lớp rất nhỏ.
-    \item \textbf{Biến thiên nội lớp do mặt cắt giải phẫu:} Cùng một thân gỗ, mặt cắt ngang (cross-section), mặt cắt xuyên tâm (radial) và mặt cắt tiếp tuyến (tangential) thể hiện hoa văn vân hoàn toàn khác biệt.
-    \item \textbf{Sự phụ thuộc vào màu sắc bề mặt:} Gỗ có thể bị biến đổi màu do tuổi thọ, điều kiện sấy, hoặc chủ động sơn màu, phủ vecni. Mô hình học máy nếu chỉ dựa vào màu sắc sẽ dễ dàng bị đánh lừa.
-\end{enumerate}
+Hai khó khăn chính là sự tương đồng về kết cấu giữa các loài và biến thiên trong cùng loài do mặt cắt, vị trí chụp hoặc điều kiện quang học. Tăng cường dữ liệu được đưa vào huấn luyện để mở rộng điều kiện ảnh mà mô hình quan sát; mức cải thiện do từng thành phần phải được đánh giá bằng thí nghiệm đối chứng.
 
-\section{Công Trình Liên Quan}
-Các nghiên cứu ban đầu về nhận dạng gỗ thường sử dụng trích xuất đặc trưng kết cấu truyền thống. Barmpoutis và cộng sự \cite{barmpoutis2018wood} đã đề xuất phân tích kết cấu đa chiều kết hợp Local Binary Patterns (LBP) \cite{ojala2002multiresolution} và ma trận đồng xuất mức xám GLCM \cite{haralick1973textural} phân loại bằng Support Vector Machine (SVM). Mặc dù các phương pháp này có chi phí tính toán thấp, chúng thiếu khả năng trích xuất các đặc trưng biểu diễn mức cao và nhạy cảm với điều kiện chiếu sáng.
+\subsection{Mục tiêu, phạm vi và trạng thái thực hiện}
+Nhóm xây dựng quy trình chuẩn bị dữ liệu, mô hình cơ sở LBP--GLCM--SVM và mô hình WoodNet sử dụng ResNet18 tiền huấn luyện trên ImageNet. Kết quả đã ghi nhận gồm so sánh hai phương pháp trên cùng tập kiểm thử, phân tích theo từng loài, kiểm tra độ bền màu và minh họa Grad-CAM. Mã nguồn có hỗ trợ ResNet50 và ConvNeXt-Tiny, nhưng hai cấu hình này cùng các thí nghiệm đối chứng chưa có kết quả kiểm chứng trong lần báo cáo.
 
-Với sự phát triển của Deep Learning, các kiến trúc Convolutional Neural Networks (CNN) như ResNet \cite{he2016deep} và ConvNeXt \cite{liu2022convnet} chứng minh năng lực trích xuất đặc trưng kết cấu vượt trội \cite{geirhos2019imagenet}. Tuy nhiên, việc áp dụng trực tiếp mô hình nạp sẵn từ ImageNet sang bài toán vân gỗ đòi hỏi kỹ thuật học chuyển giao phù hợp \cite{yosinski2014how} nhằm thích nghi từ đối tượng tự nhiên sang đặc trưng vi mô của gỗ mà không phá vỡ các trọng số đã học.
+Phạm vi là phân loại ảnh đơn nhãn trong 12 loài đã biết. Nhóm chưa đánh giá phát hiện hoặc phân đoạn gỗ trong nền phức tạp, nhận diện loài ngoài tập nhãn, ảnh hiện trường hay mẫu gỗ đã nhuộm/phủ vecni. Những ứng dụng thực tiễn nêu trên là định hướng, chưa phải năng lực đã được xác nhận.
 
-\section{Phương Pháp Đề Xuất}
+\section{Cơ sở lý thuyết và nghiên cứu liên quan}
+\subsection{Đặc trưng kết cấu và SVM}
+LBP mô tả quan hệ độ sáng giữa một điểm ảnh và các điểm lân cận. Dạng uniform gom các mẫu có tối đa hai lần chuyển mức nhị phân vào những nhóm đặc trưng, đồng thời có một nhóm dành cho các mẫu không uniform~\cite{ojala2002multiresolution}. GLCM thống kê các cặp mức xám theo khoảng cách và hướng, từ đó tính các thuộc tính như độ tương phản, độ đồng nhất, năng lượng và tương quan~\cite{haralick1973textural}. SVM với nhân RBF học ranh giới phân loại phi tuyến từ các vector đặc trưng đã trích xuất.
 
-\subsection{Bộ dữ liệu thực nghiệm WOOD-AUTH}
-Nghiên cứu sử dụng bộ dữ liệu chuẩn công khai WOOD-AUTH \cite{barmpoutis2019dataset} do Phòng thí nghiệm Công nghệ Gỗ, Đại học Aristotle Thessaloniki và Đại học Hoàng gia London công bố. Bộ dữ liệu gồm 8.544 ảnh macro độ phân giải $200 \times 200$ pixel thuộc 12 loài gỗ bản địa châu Âu:
-(1) Dẻ gai (\textit{Fagus sylvatica}),
-(2) Keo dậu (\textit{Robinia pseudoacacia}),
-(3) Anh đào dại (\textit{Prunus avium}),
-(4) Dẻ Trùng Khánh (\textit{Castanea sativa}),
-(5) Thông Douglas (\textit{Pseudotsuga menziesii}),
-(6) Thông rụng lá (\textit{Larix decidua}),
-(7) Sồi châu Âu (\textit{Quercus robur}),
-(8) Thông Scots (\textit{Pinus sylvestris}),
-(9) Ti trăn (\textit{Platanus orientalis}),
-(10) Bạch dương (\textit{Populus tremula}),
-(11) Cây thiên đường (\textit{Ailanthus altissima}), và
-(12) Óc chó (\textit{Juglans regia}).
+Barmpoutis và cộng sự đề xuất mô tả kết cấu đa chiều bằng phân tích các tín hiệu không gian và phân loại bằng SVM~\cite{barmpoutis2018wood}. Mô hình LBP--GLCM--SVM trong báo cáo là mốc so sánh do nhóm triển khai, không được coi là bản tái lập phương pháp chính của công trình đó. Các kết quả ở hai nghiên cứu cũng không được đối chiếu trực tiếp khi chưa đồng nhất phiên bản dữ liệu và quy trình đánh giá.
 
-Dữ liệu gốc được chia thành 5.708 ảnh Train và 2.836 ảnh Test. Để đảm bảo tính khách quan và ngăn chặn hoàn toàn rò rỉ dữ liệu (data leakage), nhóm giữ nguyên 2.836 ảnh làm tập Test độc lập. Từ 5.708 ảnh của tập Train, nhóm thực hiện chia phân tầng (stratified) theo tỷ lệ 80:20 thành tập Train (4.566 ảnh) và tập Validation (1.142 ảnh) được lưu vết trong \texttt{splits.json}.
+\subsection{CNN và học chuyển giao}
+Mạng tích chập học các bộ lọc trực tiếp từ dữ liệu. ResNet bổ sung nhánh nối tắt để cộng biểu diễn đầu vào với phần biến đổi học được, hỗ trợ tối ưu mạng sâu~\cite{he2016deep}. ResNet18 dùng BasicBlock, trong khi ResNet50 dùng Bottleneck và có độ sâu lớn hơn. ConvNeXt-Tiny là một CNN hiện đại sử dụng tích chập depthwise với nhân lớn, LayerNorm và GELU~\cite{liu2022convnet}. Các kiến trúc này được hỗ trợ để khảo sát, nhưng chỉ ResNet18 có số liệu thực nghiệm được trình bày ở đây.
 
-\subsection{Chiến lược Color Augmentation}
-Để buộc mạng nơ-ron học cấu trúc hình học của vân thay vì dựa dẫm vào màu sắc, nhóm áp dụng chuỗi biến đổi trong pha huấn luyện:
+Học chuyển giao tận dụng trọng số đã học trên ImageNet và tinh chỉnh cho bài toán mới~\cite{yosinski2014how}. Quy trình hai giai đoạn cho đầu phân loại mới thích nghi trước, sau đó cập nhật toàn mạng với tốc độ học nhỏ hơn cho backbone. Đây là lựa chọn thiết kế của nhóm; chưa có đối chứng để khẳng định nó tốt hơn các chiến lược huấn luyện khác.
+
+\subsection{Chỉ số đánh giá và Grad-CAM}
+Accuracy là tỷ lệ ảnh dự đoán đúng. Với lớp $c$, precision $P_c$ đo tỷ lệ đúng trong các dự đoán thuộc lớp đó, còn recall $R_c$ đo tỷ lệ ảnh thực sự thuộc lớp được nhận diện đúng. Nhóm sử dụng
 \begin{equation}
-\mathcal{T}_{aug} = \mathcal{T}_{norm} \circ \mathcal{T}_{color} \circ \mathcal{T}_{spatial}
+ F1_c=\frac{2P_cR_c}{P_c+R_c},\qquad
+ \operatorname{Macro\text{-}F1}=\frac{1}{12}\sum_{c=1}^{12}F1_c.
 \end{equation}
-Trong đó $\mathcal{T}_{spatial}$ gồm RandomResizedCrop ($scale \in [0.6, 1.0]$), lật ngang, lật dọc và quay góc $\pm 15^\circ$. Phép biến đổi $\mathcal{T}_{color}$ gồm ColorJitter (độ sáng, tương phản, độ bão hòa $0.4$, sắc thái $0.1$) và RandomGrayscale với xác suất $20\%$.
+Macro-F1 cho mỗi loài trọng số ngang nhau, hữu ích khi số ảnh giữa các lớp không cân bằng. Ma trận nhầm lẫn chuẩn hóa theo hàng mô tả phân bố dự đoán trong từng lớp thực tế; phần tử đường chéo tương ứng recall, không phải F1.
 
-\subsection{Kiến trúc mạng WoodNet}
-Mạng \texttt{WoodNet} sử dụng xương sống ResNet18 \cite{he2016deep} nạp sẵn trọng số ImageNet. Tầng phân loại fully-connected nguyên bản được thay thế bằng khối Custom Head đa tầng:
-\begin{align}
-\mathbf{h}_1 &= \text{ReLU}(\text{BatchNorm1d}(\mathbf{W}_1 \text{Dropout}_{0.4}(\mathbf{f}) + \mathbf{b}_1)) \\
-\mathbf{z} &= \mathbf{W}_2 \text{Dropout}_{0.3}(\mathbf{h}_1) + \mathbf{b}_2
-\end{align}
-với $\mathbf{f} \in \mathbb{R}^{512}$ là vector đặc trưng đầu ra của backbone, $\mathbf{h}_1 \in \mathbb{R}^{256}$, và $\mathbf{z} \in \mathbb{R}^{12}$ là logit tương ứng 12 loài gỗ.
+Grad-CAM dùng gradient của điểm số lớp đích đối với các bản đồ đặc trưng cuối để tạo bản đồ nhiệt~\cite{selvaraju2017grad}. Phương pháp cung cấp thông tin định tính về vùng ảnh ảnh hưởng đến dự đoán, không chứng minh mô hình nhận biết một cấu trúc giải phẫu gỗ cụ thể.
 
-\subsection{Quy trình huấn luyện hai giai đoạn (Two-Stage Training)}
-\begin{enumerate}
-    \item \textbf{Giai đoạn 1 (Warm-up Head):} Đóng băng toàn bộ tham số của backbone, chỉ tối ưu Classifier Head bằng thuật toán AdamW \cite{loshchilov2019decoupled} với tốc độ học $\eta_1 = 10^{-3}$ trong 5 epoch. Backbone được giữ ở chế độ \texttt{eval()} để ổn định thông số thống kê của BatchNorm.
-    \item \textbf{Giai đoạn 2 (Full Fine-Tuning):} Mở khóa toàn bộ backbone và huấn luyện với tốc độ học phân tách (Differential Learning Rates): $\eta_{backbone} = 10^{-4}$ và $\eta_{head} = 10^{-3}$. Bộ điều chỉnh tốc độ học Cosine Annealing suy giảm theo từng epoch.
-\end{enumerate}
-Hàm mất mát là Cross-Entropy kết hợp làm mịn nhãn (Label Smoothing $\alpha = 0.1$):
+\section{Dữ liệu và phương pháp}
+\subsection{Bộ dữ liệu và cách chia tập}
+Nhóm sử dụng bản dữ liệu công khai trên Zenodo gồm 8.544 ảnh RGB, kích thước gốc $200\times200$ điểm ảnh, thuộc 12 loài~\cite{barmpoutis2019dataset}. Tên khoa học được giữ làm căn cứ định danh; riêng \textit{Robinia pseudoacacia} được ghi là Black locust để tránh nhầm với keo dậu (\textit{Leucaena leucocephala})~\cite{kewrobinia,vafskeodau}.
+
+\begin{table}[!t]
+\caption{Các loài gỗ và số ảnh trong tập kiểm thử}
+\label{tab:species}
+\centering\tableformat
+\begin{tabularx}{\linewidth}{@{}rYr@{}}
+\toprule
+\textbf{Lớp} & \textbf{Tên loài và tên khoa học} & \textbf{Số ảnh} \\
+\midrule
+1 & Dẻ gai / Beech; \textit{Fagus sylvatica} & 468 \\
+2 & Black locust; \textit{Robinia pseudoacacia} & 96 \\
+3 & Anh đào dại; \textit{Prunus avium} & 508 \\
+4 & Dẻ ngọt; \textit{Castanea sativa} & 200 \\
+5 & Thông Douglas; \textit{Pseudotsuga menziesii} & 232 \\
+6 & Thông rụng lá châu Âu; \textit{Larix decidua} & 216 \\
+7 & Sồi Anh; \textit{Quercus robur} & 152 \\
+8 & Thông Scots; \textit{Pinus sylvestris} & 108 \\
+9 & Tiêu huyền phương Đông; \textit{Platanus orientalis} & 108 \\
+10 & Dương lá rung; \textit{Populus tremula} & 220 \\
+11 & Cây thiên đường; \textit{Ailanthus altissima} & 276 \\
+12 & Óc chó; \textit{Juglans regia} & 252 \\
+\midrule
+\multicolumn{2}{r}{\textbf{Tổng}} & \textbf{2.836} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Tập Test gốc gồm 2.836 ảnh được giữ nguyên. Tập Train gốc gồm 5.708 ảnh được chia phân tầng thành 4.566 ảnh Train và 1.142 ảnh Validation, với seed 42. Danh sách được lưu trong \texttt{dataset/splits.json}; Validation dùng chọn checkpoint và theo dõi dừng sớm, còn Test dùng cho báo cáo đánh giá cuối và các phép biến đổi đã xác định. Không tạo thêm mẫu tăng cường trước khi chia tập.
+
+Quy trình này tách vai trò huấn luyện, chọn mô hình và kiểm thử, nhưng việc chia theo ảnh chưa chứng minh các tập độc lập theo thân cây hay mẫu gỗ vật lý. Do thiếu thông tin nhóm mẫu, báo cáo không khẳng định đã loại bỏ mọi dạng rò rỉ liên quan đến nguồn gốc ảnh.
+
+\subsection{Tiền xử lý và tăng cường dữ liệu}
+Với ResNet18, ảnh Train được đổi về $256\times256$, cắt ngẫu nhiên bằng RandomResizedCrop với tỷ lệ diện tích $[0{,}6;1{,}0]$ và đổi về $200\times200$. Nhóm áp dụng lật ngang và lật dọc, mỗi phép có xác suất $0{,}5$, cùng phép xoay ngẫu nhiên trong khoảng $\pm15^\circ$. Nhánh màu gồm ColorJitter với mức độ sáng, tương phản, bão hòa $0{,}4$, sắc độ $0{,}1$; ảnh được chuyển ngẫu nhiên sang thang xám với xác suất $0{,}2$.
+
+Cuối cùng, ảnh được chuyển thành tensor và chuẩn hóa theo thống kê ImageNet: trung bình $(0{,}485;0{,}456;0{,}406)$, độ lệch chuẩn $(0{,}229;0{,}224;0{,}225)$. Validation và Test chỉ dùng Resize $256\times256$, CenterCrop $200\times200$ và cùng phép chuẩn hóa. Tăng cường màu nhằm khuyến khích tính ổn định; mức đóng góp riêng chưa được định lượng do thiếu thí nghiệm không tăng cường màu.
+
+\subsection{Mô hình cơ sở LBP--GLCM--SVM}
+Ảnh gốc được chuyển sang thang xám để trích xuất đặc trưng. LBP uniform sử dụng $(R,P)=(1,8),(2,16),(3,24)$, tạo các histogram có lần lượt 10, 18 và 26 phần tử, tổng cộng 54 chiều. GLCM được tính sau khi lượng tử hóa thành 32 mức xám, tại khoảng cách 1 và 2 điểm ảnh cùng bốn hướng $0^\circ,45^\circ,90^\circ,135^\circ$.
+
+Năm thuộc tính GLCM là contrast, dissimilarity, homogeneity, energy và correlation. Với mỗi thuộc tính, lấy trung bình và độ lệch chuẩn trên các hướng/khoảng cách tạo thêm 10 chiều. Vector 64 chiều được đưa qua StandardScaler và SVM RBF với $C=10$, \texttt{gamma=scale}. Các tham số của StandardScaler và SVM chỉ được học từ 4.566 ảnh Train. SVM hiện trả về nhãn lớp, không sử dụng softmax như mạng học sâu.
+
+\subsection{Kiến trúc WoodNet}
+WoodNet gồm backbone và đầu phân loại tùy chỉnh. Với ResNet18, lớp phân loại ImageNet được thay bằng Identity để lấy vector $\mathbf f\in\mathbb R^{512}$ sau global average pooling. Đầu mới có cấu trúc
 \begin{equation}
-\mathcal{L} = -(1-\alpha) \log p(y) - \frac{\alpha}{K} \sum_{k=1}^K \log p(k)
+\begin{split}
+&\operatorname{Dropout}(0{,}4)\rightarrow\operatorname{Linear}(512,256)\\
+&\rightarrow\operatorname{BatchNorm1d}(256)\rightarrow\operatorname{ReLU}\\
+&\rightarrow\operatorname{Dropout}(0{,}3)\rightarrow\operatorname{Linear}(256,12).
+\end{split}
 \end{equation}
-Điểm dừng sớm (Early Stopping) và checkpoint tốt nhất được chọn tuyệt đối dựa trên \textbf{Macro-F1 trên tập Validation}.
+Đầu ra là 12 logits; cross-entropy nhận trực tiếp các logits khi huấn luyện. Softmax chỉ được áp dụng khi cần điểm dự đoán. WoodNet với backbone ResNet18 có 11.311.436 tham số, khoảng 11,31 triệu, sau khi thay đầu phân loại. Các backbone ResNet50 và ConvNeXt-Tiny được hỗ trợ trong mã nguồn với số chiều đầu ra khác, nhưng chưa được dùng để rút ra kết luận thực nghiệm.
 
-\subsection{Giải thích mô hình bằng Grad-CAM}
-Grad-CAM \cite{selvaraju2017grad} tính toán bản đồ kích hoạt trực quan cho lớp dự đoán $c$ tại lớp tích chập cuối cùng ($\text{layer4}[-1]$ của ResNet18):
+\subsection{Huấn luyện hai giai đoạn}
+Trong 5 epoch đầu, toàn bộ tham số backbone được đóng băng; BatchNorm \emph{trong backbone} giữ ở chế độ đánh giá, còn head (bao gồm BatchNorm của head) được huấn luyện với tốc độ học $10^{-3}$. Trong 10 epoch tiếp theo, toàn mạng được mở khóa, tốc độ học ban đầu là $10^{-4}$ cho backbone và $10^{-3}$ cho head. CosineAnnealingLR dùng $T_{\max}=10$ và $\eta_{\min}=0$; scheduler được cập nhật cuối mỗi epoch.
+
+Bộ tối ưu AdamW~\cite{loshchilov2019decoupled} dùng weight decay $10^{-2}$, batch size 64. Hàm cross-entropy kết hợp label smoothing $\alpha=0{,}1$:
 \begin{equation}
-\alpha_k^c = \frac{1}{Z} \sum_{i} \sum_{j} \frac{\partial y^c}{\partial A_{i,j}^k}, \quad L_{\text{Grad-CAM}}^c = \text{ReLU}\left(\sum_k \alpha_k^c A^k\right)
+\mathcal L=-(1-\alpha)\log p_y-\frac{\alpha}{12}\sum_{k=1}^{12}\log p_k.
 \end{equation}
+Checkpoint được chọn theo Macro-F1 Validation cao nhất. Dừng sớm có patience 4 ở giai đoạn tinh chỉnh, nhưng không được kích hoạt trong lần chạy 15 epoch được báo cáo.
 
-\section{Thực Nghiệm Và Kết Quả}
+\subsection{Đánh giá độ bền màu và giải thích dự đoán}
+Nhóm đánh giá trên bảy điều kiện: ảnh gốc; thang xám; bão hòa nhân $0{,}3$; sắc độ dịch $+0{,}2$ và $-0{,}2$; độ sáng nhân $0{,}6$ và $1{,}4$. Đây là sáu biến đổi tổng hợp áp dụng trước pipeline đánh giá, không phải mô hình vật lý của lớp vecni hoặc quá trình nhuộm gỗ.
 
-\subsection{Cài đặt thực nghiệm}
-Toàn bộ mã nguồn được triển khai trên môi trường PyTorch 2.14, Python 3.10 trên máy tính CPU Intel Core i5-9400F 6 lõi (2.90GHz), RAM 16GB. Chỉ số đánh giá chính là \textbf{Macro-F1} và \textbf{Accuracy} trên tập Test gồm 2.836 ảnh kiểm thử độc lập hoàn toàn.
+Grad-CAM được tính cho lớp dự đoán tại khối \texttt{layer4[-1]} của ResNet18, cho bản đồ thô $7\times7$ với đầu vào $200\times200$. Ảnh minh họa phải có cùng vùng nhìn với tensor đầu vào. Vì vậy, phần trực quan hóa bên dưới trình bày ảnh cắt giữa tương ứng và bản đồ nhiệt riêng, không dùng ảnh phủ chưa căn chỉnh để suy luận vị trí giải phẫu.
 
-\subsection{So sánh mô hình (E1 -- E4)}
-\begin{table}[htbp]
-\caption{Kết quả thực nghiệm trên tập Test benchmark 2.836 ảnh}
+\section{Thực nghiệm và thảo luận kết quả}
+\subsection{Thiết lập và phạm vi đo thời gian}
+Thực nghiệm ResNet18 chạy trên CPU với seed 42; log ghi nhận 54,59 phút cho 15 epoch. Cấu hình phụ thuộc của dự án ghim PyTorch \texttt{2.14.1+cpu} và Torchvision \texttt{0.29.1+cpu}. Log hiện không lưu đầy đủ CPU, RAM, số luồng và phiên bản của mọi thư viện trong môi trường chạy, nên thời gian chỉ được xem là số đo của lần thực nghiệm này, chưa phải chuẩn so sánh phần cứng có thể tái lập đầy đủ.
+
+Đối với ResNet18, thời gian được đo quanh bước forward theo batch 64 rồi chia cho số ảnh; không tính đọc ảnh, tiền xử lý hoặc softmax. Đối với baseline, thời gian đo bao gồm StandardScaler và SVM trên các vector đã trích xuất, không tính đọc ảnh và LBP--GLCM. Do hai phạm vi đo khác nhau, các giá trị ở Bảng~\ref{tab:results} không được dùng để kết luận độ trễ toàn hệ thống hoặc tốc độ tương đối từ ảnh đầu vào đến kết quả.
+
+\begin{table}[!t]
+\caption{Kết quả đã kiểm chứng trên 2.836 ảnh Test}
 \label{tab:results}
-\centering
-\footnotesize
-\setlength{\tabcolsep}{2.5pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\linewidth}{@{}lXrrr@{}}
+\centering\tableformat
+\begin{tabularx}{\linewidth}{@{}Yrrr@{}}
 \toprule
-\textbf{Mô hình} & \textbf{Chiến lược} & \textbf{Accuracy} & \textbf{Macro-F1} & \shortstack{\textbf{Độ trễ}\\\textbf{CPU}} \\
+\textbf{Mô hình} & \shortstack{\textbf{Accuracy}\\\textbf{(\%)}} & \shortstack{\textbf{Macro-F1}\\\textbf{(\%)}} & \shortstack{\textbf{Thời gian}\\\textbf{(ms/ảnh)}} \\
 \midrule
-LBP + GLCM & SVM (RBF) & 80.99\% & 78.92\% & \textbf{0.36 ms/ảnh} \\
-ResNet18 & Two-Stage + Color Aug & \textbf{92.74\%} & \textbf{92.57\%} & 14.73 ms/ảnh \\
-ResNet50 & Two-Stage + Color Aug & 93.41\% & 93.15\% & 32.40 ms/ảnh \\
-ConvNeXt-T & Two-Stage + Color Aug & 93.85\% & 93.52\% & 38.10 ms/ảnh \\
+LBP--GLCM--SVM & 80,99 & 78,92 & 0,36$^{a}$ \\
+ResNet18 & \textbf{92,74} & \textbf{92,57} & 14,73$^{b}$ \\
 \bottomrule
 \end{tabularx}
+\par\smallskip\begin{minipage}{\linewidth}\footnotesize
+$^{a}$ Dự đoán trên vector đặc trưng đã có. $^{b}$ Forward theo batch 64, quy đổi trung bình trên ảnh. Cả hai chưa phải thời gian toàn pipeline.
+\end{minipage}
 \end{table}
 
-Kết quả tại Bảng \ref{tab:results} khẳng định mô hình Deep Transfer Learning cải thiện vượt bậc ($+13.65\%$ Macro-F1) so với baseline LBP-SVM cổ điển. Trong đó, ResNet18 đạt sự cân bằng tối ưu giữa độ chính xác rất cao ($92.74\%$) và độ trễ CPU chỉ 14.73 ms/ảnh, hoàn toàn đáp ứng yêu cầu xử lý thời gian thực trên các hệ thống kiểm định lâm sản.
+\subsection{So sánh kết quả và diễn biến huấn luyện}
+ResNet18 phân loại đúng 2.630/2.836 ảnh (sai 206 ảnh), đạt Accuracy 92,74\% và Macro-F1 92,57\%. So với LBP--GLCM--SVM, mức cải thiện lần lượt là 11,75 và 13,65 điểm phần trăm. Kết quả cho thấy phương pháp dùng đặc trưng học được của ResNet18 có hiệu quả cao hơn baseline trong giao thức đang xét; chưa có cơ sở để kết luận nó tối ưu trong các kiến trúc học sâu.
 
-\begin{figure}[htbp]
+Mô hình cơ sở cần 0,61 giây cho bước \texttt{fit} StandardScaler--SVM, sau khi các vector đặc trưng đã được tính. Con số này không đại diện cho tổng thời gian chuẩn bị và huấn luyện từ ảnh thô. Tương tự, thời gian forward 14,73 ms/ảnh của ResNet18 chưa xác nhận độ trễ khi website xử lý một ảnh đơn lẻ; cần phép đo batch 1 và toàn pipeline cho mục tiêu đó.
+
+Hình~\ref{fig:learning} trình bày log học. Macro-F1 Validation đạt 53,57\% sau 5 epoch huấn luyện head, tăng lên 72,97\% khi bắt đầu tinh chỉnh toàn mạng tại epoch 6, và đạt 92,82\% tại epoch 15. Accuracy Validation cuối là 93,61\%, còn Accuracy Train là 91,20\%. Chênh lệch này phù hợp với việc Train dùng tăng cường mạnh và được đo trong chế độ huấn luyện, nhưng riêng chênh lệch Train--Validation không chứng minh mô hình không quá khớp.
+
+\begin{figure*}[!p]
 \centering
-\includegraphics[width=\linewidth]{figures/resnet18_color_aug_learning_curves.png}
-\caption{Đường cong hàm mất mát (Loss) và Macro-F1 qua 15 epoch huấn luyện hai giai đoạn của mô hình ResNet18.}
-\label{fig:learning_curves}
-\end{figure}
-
-\subsection{Ablation Study về Color Augmentation (E6)}
-Khi huấn luyện ResNet18 \textit{không} có Color Augmentation, Macro-F1 trên tập Test gốc đạt $92.80\%$. Tuy nhiên, khi kiểm tra trên các biến đổi màu sắc (Mục IV-D), mô hình không có Color Augmentation bị suy giảm nghiêm trọng do phụ thuộc vào sắc độ bề mặt.
-
-\subsection{Thử nghiệm độ bền vững màu sắc (Robustness Test - E7)}
-\begin{table}[htbp]
-\caption{Hiệu năng Macro-F1 (\%) trên 7 phép biến đổi màu sắc (E7)}
-\label{tab:robustness}
-\centering
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\linewidth}{@{}Xccc@{}}
-\toprule
-\textbf{Phép biến đổi} & \shortstack{\textbf{Không}\\\textbf{Color Aug}} & \shortstack{\textbf{Có Color Aug}\\\textbf{(Đề xuất)}} & \shortstack{\textbf{Mức sụt}\\\textbf{giảm}} \\
-\midrule
-Ảnh gốc (Original) & 92.80\% & \textbf{92.57\%} & -0.00\% \\
-Ảnh xám (Grayscale) & 71.30\% & \textbf{82.06\%} & -10.51\% \\
-Giảm bão hòa (Desaturate) & 80.20\% & \textbf{88.82\%} & -3.74\% \\
-Lệch màu Hue +0.2 & 66.80\% & \textbf{78.90\%} & -13.67\% \\
-Lệch màu Hue -0.2 & 68.40\% & \textbf{82.96\%} & -9.60\% \\
-Ảnh tối (Brightness 0.6) & 82.50\% & \textbf{90.74\%} & -1.83\% \\
-Ảnh sáng (Brightness 1.4) & 83.10\% & \textbf{91.04\%} & -1.53\% \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\linewidth]{figures/resnet18_color_aug_robustness_test.png}
-\caption{Biểu đồ so sánh độ bền vững Macro-F1 (\%) của ResNet18 trên 7 phép biến đổi màu sắc mô phỏng sơn phủ vecni.}
-\label{fig:robustness}
-\end{figure}
-
-Kết quả Bảng \ref{tab:robustness} và Hình \ref{fig:robustness} chứng minh giả thuyết nghiên cứu: Color Augmentation giúp mô hình duy trì Macro-F1 bền bỉ trên 78.90\% đến 91.04\% ngay cả khi màu sắc bị thay đổi triệt để (lệch màu hoặc chuyển ảnh đen trắng hoàn toàn), bảo vệ mô hình không bị đánh lừa bởi vecni nhân tạo.
-
-\subsection{Phân tích ma trận nhầm lẫn và Grad-CAM (E8)}
-Ma trận nhầm lẫn chuẩn hóa (Hình \ref{fig:cm}) cho thấy hầu hết 12 loài gỗ đều đạt F1 trên 90\%. Trong đó, \textit{Tree of Heaven} đạt 96\%, \textit{Sweet Chestnut} đạt 96\%, \textit{Beech} đạt 95\%. Một số cặp nhầm lẫn nhỏ xuất hiện giữa \textit{Scots Pine} và \textit{Douglas Fir} do cấu trúc tế bào lá kim và vòng năm của hai loài thông có độ tương đồng tự nhiên cao.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\linewidth]{figures/resnet18_color_aug_confusion_matrix.png}
-\caption{Ma trận nhầm lẫn chuẩn hóa của ResNet18 trên 12 loài gỗ thuộc tập Test benchmark (2.836 ảnh).}
+\resizebox{\textwidth}{!}{\input{figures/learning_curves_vector.tex}}
+\caption{Loss và Macro-F1 qua 15 epoch. Các đường được vẽ từ log của lần chạy; đường dọc nét đứt đánh dấu thời điểm chuyển từ huấn luyện head sang tinh chỉnh toàn mạng.}
+\label{fig:learning}
+\par\medskip
+\resizebox{\textwidth}{!}{\input{figures/confusion_matrix_vector.tex}}
+\caption{Ma trận nhầm lẫn ResNet18 trên Test, chuẩn hóa theo hàng và biểu diễn bằng phần trăm. Hàng là lớp thực tế; cột là lớp dự đoán. Chỉ số lớp tương ứng Bảng~\ref{tab:species}; giá trị đường chéo là recall của từng lớp.}
 \label{fig:cm}
-\end{figure}
+\end{figure*}
 
-\begin{figure}[htbp]
+\begin{figure*}[!t]
 \centering
-\includegraphics[width=\linewidth]{figures/gradcam_gallery.png}
-\caption{Trực quan hóa bản đồ nhiệt Grad-CAM tại lớp tích chập cuối cùng ($\text{layer4}$) cho cả mẫu dự đoán đúng và mẫu dự đoán sai.}
-\label{fig:gradcam}
+\input{figures/gradcam_panels.tex}
+\caption{Grad-CAM cho bốn mẫu có nhãn thật là dẻ gai. Trong mỗi ô: bên trái là vùng ảnh tương ứng phép cắt đầu vào, bên phải là bản đồ nhiệt $7\times7$. Màu nóng biểu thị mức đóng góp tương đối cao hơn cho lớp dự đoán; các bản đồ được chuẩn hóa riêng, không dùng để so độ mạnh tuyệt đối giữa các ảnh.}
+\label{fig:cam}
+\end{figure*}
+
+\subsection{Kết quả theo từng loài và phân tích nhầm lẫn}
+\begin{table}[!t]
+\caption{F1 theo loài và mức cải thiện so với baseline}
+\label{tab:perclass}
+\centering\tableformat
+\begin{tabularx}{\linewidth}{@{}Yrrrr@{}}
+\toprule
+\textbf{Loài} & \shortstack{\textbf{Số}\\\textbf{ảnh}} & \shortstack{\textbf{F1 cơ sở}\\\textbf{(\%)}} & \shortstack{\textbf{F1 Res18}\\\textbf{(\%)}} & \shortstack{\textbf{$\Delta$ F1}\\\textbf{(đpt)}} \\
+\midrule
+1. Dẻ gai & 468 & 85,0 & 94,5 & +9,5 \\
+2. Black locust & 96 & 65,1 & 94,2 & +29,1 \\
+3. Anh đào dại & 508 & 83,9 & 92,2 & +8,3 \\
+4. Dẻ ngọt & 200 & 85,1 & 95,8 & +10,7 \\
+5. Thông Douglas & 232 & 75,3 & 90,5 & +15,2 \\
+6. Thông rụng lá & 216 & 77,7 & 92,9 & +15,2 \\
+7. Sồi Anh & 152 & 75,9 & 92,3 & +16,4 \\
+8. Thông Scots & 108 & 81,2 & 88,0 & +6,8 \\
+9. Tiêu huyền & 108 & 71,2 & 95,0 & +23,8 \\
+10. Dương lá rung & 220 & 83,7 & 88,7 & +4,9 \\
+11. Cây thiên đường & 276 & 82,6 & 96,1 & +13,5 \\
+12. Óc chó & 252 & 80,3 & 90,7 & +10,4 \\
+\bottomrule
+\end{tabularx}
+\par\smallskip\begin{minipage}{\linewidth}\footnotesize
+Mô hình cơ sở: LBP--GLCM--SVM. Đpt: điểm phần trăm. Chênh lệch được tính trước khi làm tròn.
+\end{minipage}
+\end{table}
+
+ResNet18 cải thiện F1 ở cả 12 lớp (Bảng~\ref{tab:perclass}). Mức tăng lớn nhất thuộc Black locust (29,1 điểm phần trăm) và tiêu huyền phương Đông (23,8 điểm phần trăm). Có 10 lớp đạt F1 trên 90\%; thông Scots và dương lá rung lần lượt đạt 88,0\% và 88,7\%. F1 từng lớp được tính từ precision và recall, không được lấy trực tiếp từ đường chéo ma trận nhầm lẫn.
+
+
+
+Các lỗi nổi bật gồm dương lá rung bị dự đoán thành anh đào dại (17 ảnh) và chiều ngược lại (15 ảnh); dẻ gai thành óc chó hoặc thông Douglas (mỗi trường hợp 12 ảnh); thông Douglas thành dẻ gai hoặc óc chó (mỗi trường hợp 8 ảnh). Lớp óc chó có 244 dự đoán đúng, 42 dương tính giả và 8 âm tính giả; precision là 85,3\%, còn F1 là 90,7\%. Ma trận ở Hình~\ref{fig:cm} mô tả những cặp nhầm lẫn này, nhưng chưa đủ để xác định nguyên nhân giải phẫu của lỗi nếu không có phân tích ảnh và chuyên gia đối chiếu.
+
+\subsection{Độ bền với biến đổi màu}
+\begin{table}[!t]
+\caption{ResNet18 dưới các điều kiện màu tổng hợp}
+\label{tab:robustness}
+\centering\tableformat
+\begin{tabularx}{\linewidth}{@{}Yrrr@{}}
+\toprule
+\textbf{Điều kiện} & \shortstack{\textbf{Accuracy}\\\textbf{(\%)}} & \shortstack{\textbf{Macro-F1}\\\textbf{(\%)}} & \shortstack{\textbf{$\Delta$ Macro-F1}\\\textbf{(đpt)}} \\
+\midrule
+Ảnh gốc & 92,74 & 92,57 & -- \\
+Thang xám & 83,92 & 82,06 & $-10,51$ \\
+Bão hòa $\times 0{,}3$ & 89,81 & 88,82 & $-3,74$ \\
+Sắc độ $+0{,}2$ & 79,58 & 78,90 & $-13,67$ \\
+Sắc độ $-0{,}2$ & 84,52 & 82,96 & $-9,60$ \\
+Độ sáng $\times 0{,}6$ & 91,29 & 90,74 & $-1,83$ \\
+Độ sáng $\times 1{,}4$ & 91,18 & 91,04 & $-1,53$ \\
+\bottomrule
+\end{tabularx}
+\par\smallskip\begin{minipage}{\linewidth}\footnotesize
+$\Delta$ so với ảnh gốc; dấu âm biểu thị suy giảm. Chênh lệch lấy từ điểm số chưa làm tròn, sau đó làm tròn độc lập với các cột chỉ số.
+\end{minipage}
+\end{table}
+
+Bảng~\ref{tab:robustness} cho thấy Macro-F1 giảm 1,53--1,83 điểm phần trăm khi thay đổi độ sáng và 3,74 điểm khi giảm bão hòa. Mức giảm lớn hơn xuất hiện ở thang xám (10,51 điểm) và lệch sắc độ, đặc biệt $+0{,}2$ (13,67 điểm, còn 78,90\%). Vì vậy, mô hình vẫn phụ thuộc đáng kể vào màu sắc. Chỉ với mô hình có tăng cường màu, chưa thể tách riêng lợi ích do kỹ thuật này mang lại. Những biến đổi tổng hợp cũng không xác nhận khả năng chống chịu trước nhuộm, sơn hoặc vecni thực tế.
+
+\subsection{Minh họa Grad-CAM}
+Hình~\ref{fig:cam} chọn hai ảnh dẻ gai dự đoán đúng và hai ảnh dự đoán sai từ bộ hình đã ghi nhận. Mỗi cặp gồm vùng ảnh cắt giữa tương ứng đầu vào và bản đồ nhiệt thô. Ở hai mẫu sai, mô hình dự đoán thành cây thiên đường và thông Douglas. Phần trăm dưới hình là điểm softmax cho lớp được chọn, không phải Accuracy trên tập dữ liệu.
+
+
+
+Độ phân giải $7\times7$ chỉ cho phép xem xét vùng ảnh ở mức thô. Các hình hỗ trợ mô tả hành vi trên từng mẫu, chưa chứng minh mô hình dựa vào lỗ mạch, tia gỗ hoặc một quy luật giải phẫu cụ thể. Bộ hình minh họa ít mẫu cũng không đại diện cho toàn bộ các loài hay các trường hợp sai.
+
+\section{Ứng dụng minh họa}
+Nhóm đã xây dựng ứng dụng Streamlit local dùng chung tiền xử lý $200\times200$ với CLI và benchmark. Hugging Face là bản minh họa trực tuyến tùy chọn. Nhóm đã xây dựng giao diện website và mã suy luận ResNet18, đồng thời đưa tài nguyên lên Hugging Face Spaces. Giao diện được chia thành hai tab: tab mặc định cho tải ảnh và xem các dự đoán có điểm cao nhất; tab còn lại trình bày dữ liệu, kết quả và thông tin nghiên cứu. Hình~\ref{fig:web} mô tả luồng nhận diện trên ứng dụng local; tính sẵn sàng của dịch vụ HF được đánh giá riêng.
+
+\begin{figure}[!ht]
+\centering\small
+\fbox{\parbox{0.86\linewidth}{\centering
+Ảnh RGB do người dùng tải lên\\[2pt]
+$\downarrow$\\[2pt]
+Resize $256\times256$ và cắt giữa $200\times200$\\[2pt]
+$\downarrow$\\[2pt]
+Chuẩn hóa ImageNet và suy luận ResNet18\\[2pt]
+$\downarrow$\\[2pt]
+Top-3 dự đoán; Grad-CAM tùy chọn
+}}
+\caption{Luồng nhận diện của ứng dụng Streamlit local, dùng chung tiền xử lý với CLI và benchmark.}
+\label{fig:web}
 \end{figure}
 
-Bản đồ kích hoạt Grad-CAM (Hình \ref{fig:gradcam}) minh chứng mạng nơ-ron tập trung cao độ vào mật độ lỗ mạch gỗ (pores), thớ gỗ xoắn và sự phân bố tia gỗ (medullary rays) tự nhiên, khẳng định quyết định của mô hình dựa trên cấu trúc giải phẫu học thực thụ.
+Phiên bản giao diện có vị trí dành cho bốn mô hình, nhưng chỉ ResNet18 có tài nguyên suy luận trong bản triển khai được đối chiếu; ba mô hình còn lại được ghi là chưa sẵn sàng. Báo cáo không khẳng định đã chạy đồng thời bốn mô hình hoặc đã cung cấp Grad-CAM thời gian thực trên website. Khả năng tải mô hình và nhận diện đầu cuối trên dịch vụ đang được kiểm tra.
 
-\subsection{Triển khai ứng dụng Web Demo (Hugging Face Spaces)}
-Để phục vụ việc nghiệm thu và ứng dụng thực tiễn, nhóm đã đóng gói toàn bộ pipeline và triển khai ứng dụng Web trực tuyến trên nền tảng Hugging Face Spaces (\url{https://huggingface.co/spaces/AnomalGreatad/wood-grain-classification}). Hệ thống cho phép người dùng kiểm thử đồng thời cả 4 mô hình (ResNet-18 đề xuất, Baseline LBP+GLCM+SVM, ResNet-50 và ConvNeXt-Tiny) trên cùng một mẫu ảnh thớ vân gỗ (hỗ trợ cả kho 12 ảnh mẫu chuẩn và tải ảnh tùy biến từ người dùng). Đồng thời, hệ thống kết xuất bản đồ nhiệt Grad-CAM thời gian thực, cung cấp góc nhìn minh bạch cho chuyên gia giám định lâm sản.
+Một khác biệt cần xử lý trước khi nghiệm thu là mã web hiện cắt ảnh $224\times224$ để phù hợp đầu vào ONNX, trong khi benchmark Python dùng $200\times200$. Do đó, Accuracy và Macro-F1 trong báo cáo chỉ áp dụng cho pipeline benchmark; không được coi là kết quả đã đo của bản web. Cần thống nhất tiền xử lý, kiểm tra tính tương đương dự đoán và đo độ trễ từ thao tác tải ảnh đến hiển thị kết quả.
 
-\section{Kết Luận}
-Nghiên cứu đã xây dựng thành công quy trình phân loại 12 loài gỗ dựa trên ảnh cận cảnh macro với phương pháp học chuyển giao sâu hai giai đoạn. Mô hình ResNet18 đạt Macro-F1 ấn tượng 92.57\% (Accuracy 92.74\%), vượt trội so với baseline LBP-SVM và có khả năng chống chịu cao với các biến đổi màu sắc sơn phủ. Hệ thống đã được tích hợp giao diện demo trực quan trực tuyến và đóng gói mã nguồn mở hoàn chỉnh. Hướng phát triển tiếp theo gồm mở rộng tập dữ liệu thêm các loài gỗ quý đặc hữu Đông Nam Á và tối ưu hóa mô hình với mạng chuyên biệt cho Texture.
+\noindent\textbf{Mã nguồn:} \href{https://github.com/Anomal-gre/Y3S1_Wood_Grain_Classification}{GitHub -- Y3S1 Wood Grain Classification}.
+
+\noindent\textbf{Website minh họa:} \href{https://huggingface.co/spaces/AnomalGreatad/wood-grain-classification}{Hugging Face Spaces -- wood-grain-classification}.
+
+\section{Hạn chế và hướng phát triển}
+Thứ nhất, kết quả mới dựa trên một seed và một cách chia dữ liệu, chưa có đánh giá độ biến thiên giữa các lần chạy. Thứ hai, chưa có số liệu kiểm chứng cho ResNet50, ConvNeXt-Tiny và các đối chứng chỉ huấn luyện head hoặc không tăng cường màu. Vì vậy, các cấu hình này là kế hoạch thực nghiệm tiếp theo, không phải kết quả hoàn thành.
+
+Thứ ba, dữ liệu giới hạn ở 12 loài và ảnh cận cảnh; chưa đánh giá trên mẫu gỗ vật lý độc lập theo nhóm, ảnh hiện trường, loài chưa biết hoặc ảnh gỗ đã xử lý bề mặt. Thứ tư, độ trễ hiện được đo ở một phần pipeline và chưa đầy đủ thông tin phần cứng. Cuối cùng, Grad-CAM chỉ cung cấp giải thích định tính và bản triển khai web cần được kiểm chứng với cùng giao thức tiền xử lý.
+
+Các bước tiếp theo là hoàn thành các đối chứng với cùng ngân sách huấn luyện, chạy nhiều seed và báo cáo trung bình cùng độ phân tán; bổ sung dữ liệu có thông tin mẫu vật để chia theo nhóm; đánh giá ảnh thực tế và trường hợp ngoài tập nhãn; đồng thời chuẩn hóa pipeline và đo thời gian xử lý ảnh đơn trên website.
+
+\section{Kết luận}
+\nopagebreak[4]
+Báo cáo đã xây dựng và đánh giá quy trình phân loại 12 loài gỗ trên WOOD-AUTH bằng baseline LBP--GLCM--SVM và ResNet18 học chuyển giao hai giai đoạn. ResNet18 đạt Accuracy 92,74\% và Macro-F1 92,57\%, cải thiện 13,65 điểm phần trăm Macro-F1 so với baseline trên cùng tập Test. Phân tích theo loài cho thấy cải thiện ở cả 12 lớp, trong khi kiểm tra màu cho thấy mô hình vẫn nhạy với thang xám và lệch sắc độ. Kết quả hỗ trợ lựa chọn ResNet18 làm mô hình demo hiện tại, nhưng chưa xác nhận ưu thế so với các mạng sâu hơn hoặc độ tin cậy trong giám định ngoài thực tế. Hoàn thành đối chứng và kiểm chứng triển khai là những công việc cần tiếp tục.
 
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
-
 \end{document}

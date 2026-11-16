@@ -1,56 +1,62 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-.venv/
-venv/
-ENV/
-
-# Data & Datasets (Do NOT commit dataset according to assignment requirements)
-dataset/
-data/
-Wood Dataset/
+# Local datasets, downloaded archives and model artifacts (keep them on disk).
+/dataset/
+/data/
+/Wood Dataset/
+/samples/
 *.zip
-*.tar.gz
 *.rar
-
-# Checkpoints & Large weights
-models/
-checkpoints/
+*.tar.gz
 *.pth
 *.pt
 *.onnx
+*.joblib
 
-# Outputs and logs (keep directory structure if needed, ignore large temp artifacts)
-outputs/runs/
-.cache/
+# Temporary tools, installers, deployment copies and presentation exports.
+/tmp/
+/output/
+/dist/
+/hf_space/
+/hf_space_static/
+/wood_grain_classification_implementation_plan_v3.md
+
+# Python environments and caches.
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
 .pytest_cache/
+.cache/
+.coverage
+htmlcov/
 
-# IDE & OS
+# Generated experiment figures; recorded JSON metrics remain versioned.
+/outputs/checkpoints/
+/outputs/figures/
+/outputs/runs/
+*.log
+!outputs/metrics/*_train.log
+
+# LaTeX build intermediates. Keep report/main.pdf as the submission PDF.
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.out
+*.synctex.gz
+/report/main-fixed.*
+/report/figures/resnet18_*.png
+/report/figures/sample_cam.jpg
+
+# Editor settings, OS files and local credentials.
 .vscode/
 .idea/
-*.swp
-*.swo
 .DS_Store
 Thumbs.db
-
-# Browser inference model used by the static Space
-!hf_space_static/assets/wood_resnet18.onnx
+*.swp
+*.swo
+.env
+.env.*
+!.env.example

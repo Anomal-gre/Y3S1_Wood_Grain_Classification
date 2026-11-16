@@ -1,1 +1,0 @@
-# Wood grain classification package

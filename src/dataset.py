@@ -51,11 +51,15 @@ def build_train_transform(
     ])
     return T.Compose(ops)
 
+def build_eval_image_transform(img_size: int = 200) -> T.Compose:
+    """Return the exact RGB view seen by the model, also used for CAM overlays."""
+    return T.Compose([T.Resize((256, 256)), T.CenterCrop(img_size)])
+
+
 def build_eval_transform(img_size: int = 224) -> T.Compose:
     """Build deterministic transform for validation and test."""
     return T.Compose([
-        T.Resize((256, 256)),
-        T.CenterCrop(img_size),
+        build_eval_image_transform(img_size),
         T.ToTensor(),
         T.Normalize(mean=MEAN, std=STD),
     ])

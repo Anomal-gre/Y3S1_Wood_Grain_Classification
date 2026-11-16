@@ -3,7 +3,6 @@ Utility functions for Wood Grain Classification.
 Seed management, configuration parsing, history logging, and environment setup.
 """
 
-import os
 import json
 import random
 import logging
@@ -13,7 +12,7 @@ import yaml
 import torch
 
 def set_seed(seed: int = 42) -> None:
-    """Set random seed for Python, NumPy, and PyTorch for full reproducibility."""
+    """Set RNG seeds; reproducibility also depends on data order and the runtime."""
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)

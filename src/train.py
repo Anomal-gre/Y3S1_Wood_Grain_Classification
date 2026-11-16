@@ -15,12 +15,10 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from typing import Dict, Tuple, List
-import numpy as np
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 from sklearn.metrics import f1_score, accuracy_score
-from tqdm import tqdm
 
 from src.utils import set_seed, load_config, setup_logger, save_json, get_device
 from src.dataset import (
@@ -145,7 +143,11 @@ def train(config_path: str, override_seed: int = None, override_device: str = No
     batch_size = cfg["data"].get("batch_size", 64)
     num_workers = cfg["data"].get("num_workers", 0)
 
-    train_tf = build_train_transform(img_size=img_size, color_aug=color_aug)
+    train_tf = build_train_transform(
+        img_size=img_size, color_aug=color_aug,
+        **cfg["data"].get("jitter", {}),
+        grayscale_p=cfg["data"].get("grayscale_p", 0.2),
+    )
     eval_tf = build_eval_transform(img_size=img_size)
 
     train_loader = get_dataloader(

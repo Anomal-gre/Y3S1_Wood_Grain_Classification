@@ -17,15 +17,14 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import torch
 from sklearn.metrics import accuracy_score, f1_score, classification_report, confusion_matrix
-from tqdm import tqdm
 
-from src.utils import set_seed, load_config, save_json, get_device
+from src.utils import load_config, save_json, get_device
 from src.dataset import (
     load_split_samples,
     build_eval_transform,

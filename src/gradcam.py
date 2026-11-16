@@ -5,7 +5,7 @@ Generates saliency heatmaps for both correctly classified and misclassified wood
 
 import sys
 from pathlib import Path
-from typing import Tuple, List, Optional
+from typing import Optional
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
@@ -19,8 +19,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from src.utils import set_seed, load_config, get_device
-from src.dataset import build_eval_transform, load_split_samples
+from src.utils import load_config, get_device
+from src.dataset import build_eval_transform, build_eval_image_transform, load_split_samples
 from src.model import WoodNet
 
 class GradCAM:
@@ -31,26 +31,33 @@ class GradCAM:
         self.gradients = None
         self.activations = None
 
-        # Register forward and backward hooks
-        self.target_layer.register_forward_hook(self._forward_hook)
-        self.target_layer.register_full_backward_hook(self._backward_hook)
+        # Capture the gradient on the output tensor without wrapping in-place blocks.
+        self._handle = self.target_layer.register_forward_hook(self._forward_hook)
 
     def _forward_hook(self, module, input, output):
         self.activations = output.detach()
+        if torch.is_grad_enabled() and output.requires_grad:
+            output.register_hook(self._save_gradient)
 
-    def _backward_hook(self, module, grad_input, grad_output):
-        self.gradients = grad_output[0].detach()
+    def _save_gradient(self, gradient):
+        self.gradients = gradient.detach()
+
+    def close(self):
+        """Remove the persistent hook when a CAM instance is no longer needed."""
+        self._handle.remove()
 
     def generate(self, input_tensor: torch.Tensor, target_class: Optional[int] = None) -> np.ndarray:
         self.model.eval()
-        output = self.model(input_tensor)
+        self.gradients = None
+        self.activations = None
+        with torch.enable_grad():
+            output = self.model(input_tensor.detach().requires_grad_(True))
 
-        if target_class is None:
-            target_class = output.argmax(dim=1).item()
-
-        score = output[0, target_class]
-        self.model.zero_grad()
-        score.backward()
+            if target_class is None:
+                target_class = output.argmax(dim=1).item()
+            score = output[0, target_class]
+            self.model.zero_grad(set_to_none=True)
+            score.backward()
 
         # Global average pooling of gradients
         weights = torch.mean(self.gradients, dim=(2, 3), keepdim=True)
@@ -140,7 +147,7 @@ def generate_gradcam_gallery(
 
         sample_info = {
             "path": img_path,
-            "image": im_rgb,
+            "image": build_eval_image_transform(cfg["data"].get("img_size", 200))(im_rgb),
             "tensor": tensor,
             "gt": gt_label,
             "pred": pred_label,
@@ -190,7 +197,14 @@ def generate_gradcam_gallery(
     Path(output_fig).parent.mkdir(parents=True, exist_ok=True)
     plt.savefig(output_fig, dpi=300)
     plt.close()
+    gradcam.close()
     print(f"Successfully generated Grad-CAM gallery at: {output_fig}")
 
 if __name__ == "__main__":
-    generate_gradcam_gallery()
+    import argparse
+    parser = argparse.ArgumentParser(description="Generate Grad-CAM gallery from a trained checkpoint")
+    parser.add_argument("--config", default="configs/resnet18.yaml")
+    parser.add_argument("--ckpt", default=None)
+    parser.add_argument("--output", default="outputs/figures/gradcam_gallery.png")
+    args = parser.parse_args()
+    generate_gradcam_gallery(config_path=args.config, ckpt_path=args.ckpt, output_fig=args.output)

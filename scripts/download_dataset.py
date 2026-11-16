@@ -3,8 +3,6 @@ Script to download and extract Wood Species Dataset from Zenodo (Record 2545611)
 Reference: Barmpoutis et al. (2018), DOI: 10.5281/zenodo.2545611
 """
 
-import os
-import sys
 import zipfile
 import urllib.request
 from pathlib import Path

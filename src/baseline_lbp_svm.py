@@ -5,7 +5,6 @@ Experiment E1.
 """
 
 import time
-import json
 import sys
 from pathlib import Path
 from typing import List, Tuple
@@ -67,7 +66,8 @@ def extract_features_dataset(samples: List[Tuple[str, int]], desc: str = "Extrac
 def run_baseline(
     splits_file: str = "dataset/splits.json",
     output_file: str = "outputs/metrics/baseline_lbp_svm.json",
-    seed: int = 42
+    seed: int = 42,
+    model_file: str = "outputs/checkpoints/baseline_lbp_glcm_svm.joblib"
 ):
     set_seed(seed)
     print("=" * 60)
@@ -95,6 +95,10 @@ def run_baseline(
     t_start_train = time.time()
     clf.fit(X_train, y_train)
     train_duration = time.time() - t_start_train
+    from joblib import dump
+    model_path = Path(model_file)
+    model_path.parent.mkdir(parents=True, exist_ok=True)
+    dump(clf, model_path)
     print(f"Training completed in {train_duration:.2f}s.")
 
     # Evaluate inference latency
@@ -125,6 +129,8 @@ def run_baseline(
         "train_samples": len(X_train),
         "test_samples": len(X_test),
         "feature_dim": int(X_train.shape[1]),
+        "model_file": str(model_path),
+        "latency_scope": "StandardScaler + SVM predict; excludes image IO and LBP/GLCM extraction",
         "train_time_sec": round(train_duration, 2),
         "inference_latency_ms": round(ms_per_image, 2),
         "test_accuracy": round(test_acc, 4),
